@@ -15,7 +15,7 @@ import Home from './components/Home'
 
 function App() {
     return (
-        <div className='min-h-screen transition-all transition-duration-200 layout-content surface-ground w-full flex align-items-center justify-content-center w-full'>
+        <div className='min-h-screen transition-all transition-duration-200 layout-content surface-ground w-full flex align-items-center justify-content-center w-full px-4'>
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />} />

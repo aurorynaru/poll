@@ -2,10 +2,12 @@ import React from 'react'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+    const navigate = useNavigate()
     return (
-        <div className='flex align-items-center justify-content-center w-full'>
+        <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
                 <div className='text-center mb-5'>
                     <div className='text-900 text-3xl font-medium mb-5'>
@@ -38,6 +40,9 @@ const Home = () => {
                         />
                         <span className='text-2xl'> or </span>
                         <Button
+                            onClick={() => {
+                                navigate('/create')
+                            }}
                             label='Create poll'
                             icon='pi pi-caret-up'
                             className='w-3 bg-danger'
