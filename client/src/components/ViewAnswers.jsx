@@ -59,12 +59,14 @@ const ViewAnswers = ({ data }) => {
                 <Column
                     field='answer'
                     header='Answers'
-                    bodyStyle={{ textAlign: 'start', width: '75%' }}
+                    Style={{ width: '60%' }}
+                    bodyStyle={{ textAlign: 'start' }}
                 ></Column>
                 <Column
                     rowEditor
-                    headerStyle={{ width: 'fit', minWidth: 'fit' }}
-                    bodyStyle={{ textAlign: 'end', width: '15%' }}
+                    headerStyle={{ width: '30%', minWidth: 'fit' }}
+                    Style={{ width: '30%' }}
+                    bodyStyle={{ textAlign: 'end' }}
                 ></Column>
                 <Column
                     body={actionBodyTemplate}
