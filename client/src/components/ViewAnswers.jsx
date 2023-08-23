@@ -56,17 +56,21 @@ const ViewAnswers = ({ data }) => {
                 stripedRows
                 tableStyle={{ minWidth: '10rem' }}
             >
-                <Column field='answer' header='Answers'></Column>
+                <Column
+                    field='answer'
+                    header='Answers'
+                    bodyStyle={{ textAlign: 'start', width: '75%' }}
+                ></Column>
                 <Column
                     rowEditor
                     headerStyle={{ width: 'fit', minWidth: 'fit' }}
-                    bodyStyle={{ textAlign: 'end' }}
+                    bodyStyle={{ textAlign: 'end', width: '15%' }}
                 ></Column>
                 <Column
                     body={actionBodyTemplate}
                     exportable={false}
                     headerStyles={{ width: 'fit', minWidth: 'fit' }}
-                    bodyStyle={{ textAlign: 'end' }}
+                    bodyStyle={{ textAlign: 'end', width: '10%' }}
                 ></Column>
             </DataTable>
             <Dialog
