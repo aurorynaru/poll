@@ -4,10 +4,12 @@ import { Column } from 'primereact/column'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
+import { InputText } from 'primereact/inputtext'
 
-const ViewAnswers = ({ data }) => {
+const ViewAnswers = ({ data, setAnswersArray }) => {
     const [dataArray, setDataArray] = useState([])
     const [deleteProductDialog, setDeleteProductDialog] = useState(false)
+    const [answerRow, setAnswerRow] = useState('')
 
     useEffect(() => {
         setDataArray(data)
@@ -29,7 +31,14 @@ const ViewAnswers = ({ data }) => {
                 label='Yes'
                 icon='pi pi-check'
                 severity='danger'
-                onClick={() => console.log('deleted kek')}
+                onClick={() => {
+                    setAnswersArray((prev) => {
+                        return prev.filter(
+                            (answer) => answer.id != answerRow.id
+                        )
+                    })
+                    setDeleteProductDialog(false)
+                }}
             />
         </React.Fragment>
     )
@@ -38,13 +47,32 @@ const ViewAnswers = ({ data }) => {
         return (
             <React.Fragment>
                 <Button
+                    type='button'
                     icon='pi pi-trash '
                     rounded
                     outlined
                     severity='danger'
                     size='small'
+                    onClick={() => {
+                        setAnswerRow(rowData)
+                        setDeleteProductDialog(true)
+                    }}
                 />
             </React.Fragment>
+        )
+    }
+    const onRowEditComplete = (e) => {
+        console.log(e)
+    }
+
+    const textEditor = (options) => {
+        return (
+            <InputText
+                type='text'
+                value={options.value}
+                onChange={(e) => options.editorCallback(e.target.value)}
+                className='w-auto'
+            />
         )
     }
 
@@ -52,6 +80,7 @@ const ViewAnswers = ({ data }) => {
         <div className='card p-fluid'>
             <DataTable
                 editMode='row'
+                onRowEditComplete={onRowEditComplete}
                 value={dataArray}
                 stripedRows
                 tableStyle={{ minWidth: '10rem' }}
@@ -60,6 +89,7 @@ const ViewAnswers = ({ data }) => {
                     field='answer'
                     header='Answers'
                     Style={{ width: '60%' }}
+                    editor={(options) => textEditor(options)}
                     bodyStyle={{ textAlign: 'start' }}
                 ></Column>
                 <Column
@@ -75,6 +105,7 @@ const ViewAnswers = ({ data }) => {
                     bodyStyle={{ textAlign: 'end', width: '10%' }}
                 ></Column>
             </DataTable>
+
             <Dialog
                 visible={deleteProductDialog}
                 style={{ width: '32rem' }}
@@ -89,10 +120,10 @@ const ViewAnswers = ({ data }) => {
                         className='pi pi-exclamation-triangle mr-3'
                         style={{ fontSize: '2rem' }}
                     />
-                    {dataArray && (
+                    {answerRow && (
                         <span>
                             Are you sure you want to delete{' '}
-                            <b>{dataArray.answer}</b>?
+                            <b>{answerRow.answer}</b>?
                         </span>
                     )}
                 </div>

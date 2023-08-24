@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from 'primereact/button'
 import FormInput from './FormInput.jsx'
 import { Divider } from 'primereact/divider'
 import ViewAnswers from './ViewAnswers.jsx'
+import { v4 as uuidv4 } from 'uuid'
 
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
+    const [pollAnswer, setPollAnswer] = useState('')
+    const [pollTitle, setPollTitle] = useState('')
 
     const {
         register,
@@ -21,8 +24,18 @@ const CreatePoll = () => {
             answer: ''
         }
     })
-    console.log(answersArray)
+
+    useEffect(() => {
+        const subscription = watch((value, { name }) => {
+            setPollAnswer(value.answer)
+            setPollTitle(value.pollTitle)
+            console.log(name)
+        })
+        return () => subscription.unsubscribe()
+    }, [watch])
+
     const onSubmit = (data) => console.log(data)
+
     return (
         <div className='flex align-items-center justify-content-center w-full rounded '>
             <form
@@ -57,10 +70,13 @@ const CreatePoll = () => {
                             if (getValues('answer') != '') {
                                 setAnswersArray((prev) => {
                                     const obj = {}
-                                    obj.answer = getValues('answer')
+                                    obj.answer = pollAnswer
+                                    obj.id = uuidv4()
+
                                     return [...prev, obj]
                                 })
-                                setValue('answer', '', { shouldTouch: true })
+
+                                setValue('answer', '')
                             } else {
                                 console.log('null field')
                             }
@@ -75,7 +91,10 @@ const CreatePoll = () => {
 
                 <div>
                     {answersArray.length > 0 && (
-                        <ViewAnswers data={answersArray} />
+                        <ViewAnswers
+                            data={answersArray}
+                            setAnswersArray={setAnswersArray}
+                        />
                     )}
                 </div>
                 <div className='w-full flex justify-content-center mt-5'>
