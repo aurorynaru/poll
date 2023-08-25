@@ -5,6 +5,7 @@ import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
+import EditText from './EditText'
 
 const ViewAnswers = ({ data, setAnswersArray }) => {
     const [dataArray, setDataArray] = useState([])
@@ -61,19 +62,19 @@ const ViewAnswers = ({ data, setAnswersArray }) => {
             </React.Fragment>
         )
     }
-    const onRowEditComplete = (e) => {
-        console.log(e)
-    }
 
-    const textEditor = (options) => {
-        return (
-            <InputText
-                type='text'
-                value={options.value}
-                onChange={(e) => options.editorCallback(e.target.value)}
-                className='w-auto'
-            />
-        )
+    const onRowEditComplete = (e) => {
+        setAnswersArray((prev) => {
+            const newData = prev.map((elem) => {
+                if (elem.id === e.newData.id) {
+                    return e.newData
+                } else {
+                    return elem
+                }
+            })
+
+            return newData
+        })
     }
 
     return (
@@ -89,7 +90,7 @@ const ViewAnswers = ({ data, setAnswersArray }) => {
                     field='answer'
                     header='Answers'
                     Style={{ width: '60%' }}
-                    editor={(options) => textEditor(options)}
+                    editor={(options) => <EditText options={options} />}
                     bodyStyle={{ textAlign: 'start' }}
                 ></Column>
                 <Column
