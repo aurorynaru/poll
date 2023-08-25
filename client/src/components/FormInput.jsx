@@ -9,7 +9,8 @@ const formInput = ({
     error,
     register,
     cnInput = '',
-    cnLabel = ''
+    cnLabel = '',
+    required = 'This is required'
 }) => {
     return (
         <div className='field p-fluid '>
@@ -18,7 +19,7 @@ const formInput = ({
             </label>
 
             <InputText
-                {...register(`${value}`)}
+                {...register(`${value}`, { required: required })}
                 id={inputId}
                 type='text'
                 className={`p-inputtext p-component  ${cnInput}`}

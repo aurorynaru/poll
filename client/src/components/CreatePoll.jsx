@@ -29,7 +29,6 @@ const CreatePoll = () => {
         const subscription = watch((value, { name }) => {
             setPollAnswer(value.answer)
             setPollTitle(value.pollTitle)
-            console.log(name)
         })
         return () => subscription.unsubscribe()
     }, [watch])
@@ -61,7 +60,8 @@ const CreatePoll = () => {
                         value='answer'
                         LabelText='Poll answers'
                         inputId='answer'
-                        error={errors.title?.message}
+                        error={errors.answer?.message}
+                        required={false}
                         cnInput='w-full'
                     />
 
