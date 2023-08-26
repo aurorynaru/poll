@@ -7,6 +7,7 @@ import ViewAnswers from './ViewAnswers.jsx'
 import { v4 as uuidv4 } from 'uuid'
 import Error from './Error.jsx'
 import { ipAddress } from '../address.js'
+import DateComponent from './DateComponent.jsx'
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
@@ -73,6 +74,7 @@ const CreatePoll = () => {
                     inputId='title'
                     error={errors.title?.message}
                 />
+                <DateComponent />
                 <Divider align='center'>
                     <span className='text-lg px-3 py-2 font-medium'>
                         Add your answers below

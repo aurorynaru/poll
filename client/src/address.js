@@ -1,6 +1,2 @@
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-const PORT = process.env.PORT
+const PORT = 8888
 export const ipAddress = `http://localhost:${PORT}`

@@ -16,14 +16,14 @@ export const postPoll = async (req, res) => {
     }
 }
 
-export const postOptions = async (req, res) => {
-    try {
-        const { options, pollId } = req.body
-        createOptions(options, pollId)
-    } catch (error) {
-        res.status(409).json({ error: error.message })
-    }
-}
+// export const postOptions = async (req, res) => {
+//     try {
+//         const { options, pollId } = req.body
+//         createOptions(options, pollId)
+//     } catch (error) {
+//         res.status(409).json({ error: error.message })
+//     }
+// }
 
 export const viewPoll = async (req, res) => {
     try {
