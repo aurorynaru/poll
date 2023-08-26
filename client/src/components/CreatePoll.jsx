@@ -5,7 +5,8 @@ import FormInput from './FormInput.jsx'
 import { Divider } from 'primereact/divider'
 import ViewAnswers from './ViewAnswers.jsx'
 import { v4 as uuidv4 } from 'uuid'
-
+import Error from './Error.jsx'
+import { ipAddress } from '../address.js'
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
@@ -17,11 +18,14 @@ const CreatePoll = () => {
         formState: { errors },
         watch,
         getValues,
-        setValue
+        setValue,
+        setError,
+        clearErrors
     } = useForm({
         defaultValues: {
             title: '',
-            answer: ''
+            answer: '',
+            answerAmount: 0
         }
     })
 
@@ -33,7 +37,27 @@ const CreatePoll = () => {
         return () => subscription.unsubscribe()
     }, [watch])
 
-    const onSubmit = (data) => console.log(data)
+    const onSubmit = async (data) => {
+        setValue('answerAmount', answersArray.length)
+        const answersLength = getValues('answerAmount')
+        if (!answersLength) {
+            setError('answerAmount', {
+                type: 'custom',
+                message: 'Put at least 1 answer'
+            })
+        } else {
+            //  const { title, user_id, expiration, options } = req.body
+            const values = {}
+
+            // const res = await fetch(`${ipAddress}/create`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(values)
+            // })
+        }
+    }
 
     return (
         <div className='flex align-items-center justify-content-center w-full rounded '>
@@ -77,6 +101,7 @@ const CreatePoll = () => {
                                 })
 
                                 setValue('answer', '')
+                                clearErrors('answerAmount')
                             } else {
                                 console.log('null field')
                             }
@@ -88,7 +113,11 @@ const CreatePoll = () => {
                         type='button'
                     />
                 </div>
-
+                <div className='flex justify-content-center'>
+                    {errors.answerAmount?.message && (
+                        <Error message={errors.answerAmount?.message} />
+                    )}
+                </div>
                 <div>
                     {answersArray.length > 0 && (
                         <ViewAnswers
