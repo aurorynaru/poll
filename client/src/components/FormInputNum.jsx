@@ -3,6 +3,9 @@ import React from 'react'
 import { InputNumber } from 'primereact/inputnumber'
 
 const FormInputNum = ({
+    setTimeAmount,
+    timeAmount,
+    setValue,
     value,
     register,
     inputId,
@@ -11,10 +14,11 @@ const FormInputNum = ({
     return (
         <React.Fragment>
             <InputNumber
-                {...register(`${value}`, { required: required })}
                 id={inputId}
+                inputId='integeronly'
+                value={timeAmount}
+                onValueChange={(e) => setTimeAmount(e.value)}
                 className='max-w-5rem'
-                placeholder=''
             />
         </React.Fragment>
     )

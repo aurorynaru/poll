@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Dropdown } from 'primereact/dropdown'
-
 import Error from './Error'
 import FormInputNum from './FormInputNum'
 
@@ -10,7 +9,10 @@ const DateComponent = ({
     register,
     value,
     selectedTime,
-    setSelectedTime
+    setSelectedTime,
+    setValue,
+    timeAmount,
+    setTimeAmount
 }) => {
     const time = [
         { name: 'Days' },
@@ -19,13 +21,15 @@ const DateComponent = ({
         { name: 'Seconds' }
     ]
 
-    console.log(error)
     return (
         <div className='flex flex-column gap-2'>
             <label className={` font-medium`}>Expiration</label>
             <div className='card flex flex-wrap gap-3 p-fluid w-7'>
                 <div className='p-inputgroup flex-1'>
                     <FormInputNum
+                        setTimeAmount={setTimeAmount}
+                        timeAmount={timeAmount}
+                        setValue={setValue}
                         value={value}
                         register={register}
                         inputId={inputId}

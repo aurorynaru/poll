@@ -12,6 +12,7 @@ const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
     const [pollTitle, setPollTitle] = useState('')
+    const [timeAmount, setTimeAmount] = useState('')
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
 
     const {
@@ -46,13 +47,24 @@ const CreatePoll = () => {
 
     const onSubmit = async (data) => {
         setValue('answerAmount', answersArray.length)
+        setValue('time', timeAmount)
         const answersLength = getValues('answerAmount')
+        const time = getValues('time')
         if (!answersLength) {
             setError('answerAmount', {
                 type: 'custom',
                 message: 'Put at least 1 answer'
             })
-        } else {
+        }
+
+        if (!time) {
+            setError('time', {
+                type: 'custom',
+                message: 'Put at least 1 answer'
+            })
+        }
+
+        if (answersLength) {
             //  const { title, user_id, expiration, options } = req.body
             const values = {}
 
@@ -81,6 +93,9 @@ const CreatePoll = () => {
                     error={errors.title?.message}
                 />
                 <DateComponent
+                    setTimeAmount={setTimeAmount}
+                    timeAmount={timeAmount}
+                    setValue={setValue}
                     register={register}
                     error={errors.time?.message}
                     inputId='time'
