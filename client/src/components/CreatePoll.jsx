@@ -12,6 +12,7 @@ const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
     const [pollTitle, setPollTitle] = useState('')
+    const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
 
     const {
         register,
@@ -26,9 +27,14 @@ const CreatePoll = () => {
         defaultValues: {
             title: '',
             answer: '',
+            time: '',
             answerAmount: 0
         }
     })
+
+    // useEffect(()=>{
+
+    // },[value1])
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
@@ -74,7 +80,14 @@ const CreatePoll = () => {
                     inputId='title'
                     error={errors.title?.message}
                 />
-                <DateComponent />
+                <DateComponent
+                    register={register}
+                    error={errors.time?.message}
+                    inputId='time'
+                    value='time'
+                    selectedTime={selectedTime}
+                    setSelectedTime={setSelectedTime}
+                />
                 <Divider align='center'>
                     <span className='text-lg px-3 py-2 font-medium'>
                         Add your answers below
