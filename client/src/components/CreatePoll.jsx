@@ -12,8 +12,19 @@ const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
     const [pollTitle, setPollTitle] = useState('')
-    const [timeAmount, setTimeAmount] = useState('')
+    const [timeAmount, setTimeAmount] = useState(1)
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
+    const [dueTime, setDueTime] = useState(null)
+
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }
 
     const {
         register,
@@ -29,13 +40,35 @@ const CreatePoll = () => {
             title: '',
             answer: '',
             time: '',
+            stamp: '',
             answerAmount: 0
         }
     })
 
-    // useEffect(()=>{
-
-    // },[value1])
+    useEffect(() => {
+        setValue('time', timeAmount)
+        const time = getValues('time')
+        if (time) clearErrors('time')
+        console.log(typeof time)
+        const currentDate = new Date()
+        switch (selectedTime.name) {
+            case 'Hours':
+                currentDate.setHours(currentDate.getHours() + time)
+                break
+            case 'Minutes':
+                currentDate.setMinutes(currentDate.getMinutes() + time)
+                break
+            case 'Days':
+                currentDate.setDate(currentDate.getDate() + time)
+                break
+            case 'Seconds':
+                currentDate.setSeconds(currentDate.getSeconds() + time)
+                break
+            default:
+                break
+        }
+        setDueTime(currentDate.toLocaleString('en-CA', options))
+    }, [timeAmount, selectedTime])
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
@@ -44,12 +77,14 @@ const CreatePoll = () => {
         })
         return () => subscription.unsubscribe()
     }, [watch])
+    console.log(errors)
 
     const onSubmit = async (data) => {
         setValue('answerAmount', answersArray.length)
-        setValue('time', timeAmount)
-        const answersLength = getValues('answerAmount')
         const time = getValues('time')
+
+        const answersLength = getValues('answerAmount')
+
         if (!answersLength) {
             setError('answerAmount', {
                 type: 'custom',
@@ -64,10 +99,11 @@ const CreatePoll = () => {
             })
         }
 
-        if (answersLength) {
+        if (answersLength && time) {
             //  const { title, user_id, expiration, options } = req.body
+            clearErrors('time')
             const values = {}
-
+            console.log('Sat')
             // const res = await fetch(`${ipAddress}/create`, {
             //     method: 'POST',
             //     headers: {
@@ -75,6 +111,23 @@ const CreatePoll = () => {
             //     },
             //     body: JSON.stringify(values)
             // })
+        }
+    }
+
+    const addAnswer = () => {
+        if (getValues('answer') != '') {
+            setAnswersArray((prev) => {
+                const obj = {}
+                obj.answer = pollAnswer
+                obj.id = uuidv4()
+
+                return [...prev, obj]
+            })
+
+            setValue('answer', '')
+            clearErrors('answerAmount')
+        } else {
+            console.log('null field')
         }
     }
 
@@ -92,6 +145,7 @@ const CreatePoll = () => {
                     inputId='title'
                     error={errors.title?.message}
                 />
+
                 <DateComponent
                     setTimeAmount={setTimeAmount}
                     timeAmount={timeAmount}
@@ -103,6 +157,8 @@ const CreatePoll = () => {
                     selectedTime={selectedTime}
                     setSelectedTime={setSelectedTime}
                 />
+                {dueTime && <p className='w-fit'>{dueTime}</p>}
+
                 <Divider align='center'>
                     <span className='text-lg px-3 py-2 font-medium'>
                         Add your answers below
@@ -120,22 +176,7 @@ const CreatePoll = () => {
                     />
 
                     <Button
-                        onClick={() => {
-                            if (getValues('answer') != '') {
-                                setAnswersArray((prev) => {
-                                    const obj = {}
-                                    obj.answer = pollAnswer
-                                    obj.id = uuidv4()
-
-                                    return [...prev, obj]
-                                })
-
-                                setValue('answer', '')
-                                clearErrors('answerAmount')
-                            } else {
-                                console.log('null field')
-                            }
-                        }}
+                        onClick={() => addAnswer()}
                         label='Add answer'
                         icon='pi pi-check'
                         size='small'
