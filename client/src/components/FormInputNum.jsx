@@ -11,13 +11,20 @@ const FormInputNum = ({
     inputId,
     required = 'This is required'
 }) => {
+    const setTimerFN = (e) => {
+        let value = e.target.value
+        if (value < 1) value = 1
+        console.log(value)
+        setTimeAmount(value)
+    }
+
     return (
         <React.Fragment>
             <InputNumber
                 id={inputId}
                 inputId='integeronly'
                 value={timeAmount}
-                onValueChange={(e) => setTimeAmount(e.value)}
+                onValueChange={(e) => setTimerFN(e)}
                 className='max-w-5rem'
             />
         </React.Fragment>

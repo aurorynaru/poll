@@ -6,6 +6,7 @@ import { Divider } from 'primereact/divider'
 import ViewAnswers from './ViewAnswers.jsx'
 import { v4 as uuidv4 } from 'uuid'
 import Error from './Error.jsx'
+import { Message } from 'primereact/message'
 import { ipAddress } from '../address.js'
 import DateComponent from './DateComponent.jsx'
 const CreatePoll = () => {
@@ -46,28 +47,39 @@ const CreatePoll = () => {
     })
 
     useEffect(() => {
+        const intervalId = setInterval(() => {
+            const currentDate = new Date()
+            const time = getValues('time')
+            const timeStamp = getValues('stamp')
+            switch (timeStamp.name) {
+                case 'Hours':
+                    currentDate.setHours(currentDate.getHours() + time)
+                    break
+                case 'Minutes':
+                    currentDate.setMinutes(currentDate.getMinutes() + time)
+                    break
+                case 'Days':
+                    currentDate.setDate(currentDate.getDate() + time)
+                    break
+                case 'Seconds':
+                    currentDate.setSeconds(currentDate.getSeconds() + time)
+                    break
+                default:
+                    break
+            }
+            setDueTime(currentDate.toLocaleString('en-CA', options))
+        }, 1000)
+
+        return () => {
+            clearInterval(intervalId)
+        }
+    }, [])
+
+    useEffect(() => {
         setValue('time', timeAmount)
+        setValue('stamp', selectedTime)
         const time = getValues('time')
         if (time) clearErrors('time')
-        console.log(typeof time)
-        const currentDate = new Date()
-        switch (selectedTime.name) {
-            case 'Hours':
-                currentDate.setHours(currentDate.getHours() + time)
-                break
-            case 'Minutes':
-                currentDate.setMinutes(currentDate.getMinutes() + time)
-                break
-            case 'Days':
-                currentDate.setDate(currentDate.getDate() + time)
-                break
-            case 'Seconds':
-                currentDate.setSeconds(currentDate.getSeconds() + time)
-                break
-            default:
-                break
-        }
-        setDueTime(currentDate.toLocaleString('en-CA', options))
     }, [timeAmount, selectedTime])
 
     useEffect(() => {
@@ -77,7 +89,6 @@ const CreatePoll = () => {
         })
         return () => subscription.unsubscribe()
     }, [watch])
-    console.log(errors)
 
     const onSubmit = async (data) => {
         setValue('answerAmount', answersArray.length)
@@ -103,7 +114,10 @@ const CreatePoll = () => {
             //  const { title, user_id, expiration, options } = req.body
             clearErrors('time')
             const values = {}
-            console.log('Sat')
+            values.title = data.title
+            values.expiration = dueTime
+            values.options = answersArray
+
             // const res = await fetch(`${ipAddress}/create`, {
             //     method: 'POST',
             //     headers: {
@@ -157,7 +171,9 @@ const CreatePoll = () => {
                     selectedTime={selectedTime}
                     setSelectedTime={setSelectedTime}
                 />
-                {dueTime && <p className='w-fit'>{dueTime}</p>}
+                <div className='mt-2'>
+                    {dueTime && <Message severity='warn' text={`${dueTime}`} />}
+                </div>
 
                 <Divider align='center'>
                     <span className='text-lg px-3 py-2 font-medium'>
