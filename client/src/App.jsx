@@ -9,7 +9,7 @@ import {
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
-import CreatePoll from './components/CreatePoll'
+import CreatePoll from './pages/CreatePoll'
 
 import Home from './components/Home'
 
@@ -19,7 +19,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />} />
-                    <Route path='/create/' element={<CreatePoll />} />
+                    <Route path='/poll/create/' element={<CreatePoll />} />
                 </Routes>
             </BrowserRouter>
         </div>

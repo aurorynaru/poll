@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from 'primereact/button'
-import FormInput from './FormInput.jsx'
+import FormInput from '../components/FormInput.jsx'
 import { Divider } from 'primereact/divider'
-import ViewAnswers from './ViewAnswers.jsx'
+import ViewAnswers from '../components/ViewAnswers.jsx'
 import { v4 as uuidv4 } from 'uuid'
-import Error from './Error.jsx'
+import Error from '../components/Error.jsx'
 import { Message } from 'primereact/message'
 import { ipAddress } from '../address.js'
-import DateComponent from './DateComponent.jsx'
+import DateComponent from '../components/DateComponent.jsx'
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
@@ -118,7 +118,7 @@ const CreatePoll = () => {
             values.expiration = dueTime
             values.options = answersArray
 
-            // const res = await fetch(`${ipAddress}/create`, {
+            // const res = await fetch(`${ipAddress}/poll/create`, {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'
