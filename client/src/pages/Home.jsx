@@ -5,6 +5,7 @@ import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRandomName } from '../features/randomName'
+import { setUser } from '../features/user/userSlice'
 const Home = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -24,7 +25,13 @@ const Home = () => {
                 const resAddress = await res.json()
 
                 console.log(resAddress)
-                setRandomName(resName)
+                dispatch(
+                    setUser({
+                        user: resName
+                    })
+                )
+
+                setRandomName(randomName)
             }
         }
         if (!randomName) {
@@ -35,7 +42,9 @@ const Home = () => {
             isMounted = false
         }
     }, [randomName])
-    console.log(randomName)
+
+    const name = useSelector((state) => state.user)
+    console.log(name)
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
