@@ -4,6 +4,7 @@ import cors from 'cors'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import redisClient from './redisClient.js'
+import requestIp from 'request-ip'
 //middleware
 
 import { getAddress } from './middleware/getAddress.js'
@@ -21,6 +22,19 @@ const httpServer = createServer(app)
 export const io = new Server(httpServer)
 
 const PORT = process.env.PORT
+app.post('/api/address', async (req, res) => {
+    try {
+        const ip = requestIp.getClientIp(req)
+        if (!ip) {
+            throw new Error('something went wrong')
+        }
+        req.clientIp = ip
+
+        res.status(201).json(ip)
+    } catch (error) {
+        res.status(409).json({ error: error.message })
+    }
+})
 
 app.use('/', user)
 app.use('/poll', poll)

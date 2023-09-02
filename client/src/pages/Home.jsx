@@ -15,6 +15,15 @@ const Home = () => {
             const resName = await getRandomName()
 
             if (isMounted) {
+                const res = await fetch('http://localhost:7777/api/address', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                const resAddress = await res.json()
+
+                console.log(resAddress)
                 setRandomName(resName)
             }
         }
