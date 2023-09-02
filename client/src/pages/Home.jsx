@@ -1,27 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { getRandomName } from '../features/randomName'
 const Home = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
+    const [randomName, setRandomName] = useState(null)
     useEffect(() => {
-        const yo = async () => {
-            const word = await fetch(
-                'https://random-word-api.herokuapp.com/word'
-            )
+        let isMounted = true
+        const getName = async () => {
+            const resName = await getRandomName()
 
-            const res = await word.json()
-            console.log(res[0])
+            if (isMounted) {
+                setRandomName(resName)
+            }
+        }
+        if (!randomName) {
+            getName()
         }
 
-        yo()
-    }, [])
-
+        return () => {
+            isMounted = false
+        }
+    }, [randomName])
+    console.log(randomName)
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
