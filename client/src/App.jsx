@@ -11,7 +11,7 @@ import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import CreatePoll from './pages/CreatePoll'
 
-import Home from './components/Home'
+import Home from './pages/Home'
 
 function App() {
     return (
@@ -19,7 +19,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Home />} />
-                    <Route path='/poll/create/' element={<CreatePoll />} />
+                    <Route path='/create/' element={<CreatePoll />} />
                 </Routes>
             </BrowserRouter>
         </div>

@@ -22,8 +22,8 @@ export const io = new Server(httpServer)
 
 const PORT = process.env.PORT
 
-app.use('/', getAddress, user)
-app.use('/poll', getAddress, poll)
+app.use('/', user)
+app.use('/poll', poll)
 
 httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

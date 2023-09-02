@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Home = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const yo = async () => {
+            const word = await fetch(
+                'https://random-word-api.herokuapp.com/word'
+            )
+
+            const res = await word.json()
+            console.log(res[0])
+        }
+
+        yo()
+    }, [])
+
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
