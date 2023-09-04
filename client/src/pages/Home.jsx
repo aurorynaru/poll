@@ -5,46 +5,48 @@ import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRandomName } from '../features/randomName'
-import { setUser } from '../features/user/userSlice'
+import { setUser, setAddress } from '../features/user/userSlice'
+import { getAddress } from '../middleware/midware'
 const Home = () => {
+    const name = useSelector((state) => state.user)
+    const address = useSelector((state) => state.address)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [randomName, setRandomName] = useState(null)
+
     useEffect(() => {
         let isMounted = true
-        const getName = async () => {
-            const resName = await getRandomName()
 
-            if (isMounted) {
-                const res = await fetch('http://localhost:7777/api/address', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                const resAddress = await res.json()
-
-                console.log(resAddress)
-                dispatch(
-                    setUser({
-                        user: resName
-                    })
-                )
-
-                setRandomName(randomName)
+        const getAddressFn = async () => {
+            if (isMounted && !address) {
+                const addressRes = await getAddress()
+                console.log(addressRes)
             }
         }
-        if (!randomName) {
-            getName()
+
+        if (!address) {
+            getAddressFn()
         }
+
+        // const getName = async () => {
+        //     const resName = await getRandomName()
+
+        //     if (isMounted && !name) {
+        //         dispatch(
+        //             setUser({
+        //                 user: resName
+        //             })
+        //         )
+        //     }
+        // }
+        // if (!name) {
+        //     getName()
+        // }
 
         return () => {
             isMounted = false
         }
-    }, [randomName])
+    }, [name])
 
-    const name = useSelector((state) => state.user)
-    console.log(name)
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
