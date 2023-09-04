@@ -6,10 +6,10 @@ import bcrypt from 'bcrypt'
 export const createUser = async (address) => {
     const salt = await bcrypt.genSalt()
     const hashAddress = await bcrypt.hash(address, salt)
-    console.log(hashAddress)
+
     const [res] = await pool.query(
-        'INSERT INTO user (hash_address) VALUES (?)',
-        [hashAddress]
+        'INSERT INTO user (ip_address, hash_address) VALUES (?,?)',
+        [address, hashAddress]
     )
 
     return res.insertId
@@ -20,17 +20,16 @@ export const getUserAddress = async (address) => {
         address
     ])
 
-    console.log([res])
-    if ([res].length < 2) {
-        return undefined
+    if (res[0] != undefined) {
+        return res[0].id
     } else {
-        return res.insertId
+        return undefined
     }
 }
 
 export const getUserId = async (id, address) => {
     const [res] = await pool.query('SELECT * FROM user WHERE id = ? ', [id])
-    console.log(res[0].hash_address)
+
     const isMatch = await bcrypt.compare(address, res[0].hash_address)
 
     if (!isMatch) {
@@ -51,14 +50,14 @@ export const user = async (req, res) => {
         }
 
         const isMatch = await getUserAddress(address.toString())
-
+        console.log(isMatch)
         if (isMatch === undefined) {
             const userId = await createUser(address.toString())
-            const userObj = await getUserId(userId, address)
+            const userObj = await getUserId(userId, address.toString())
 
             res.status(200).json(userObj)
         } else {
-            const userObj = await getUserId(isMatch, address)
+            const userObj = await getUserId(isMatch, address.toString())
             res.status(200).json(userObj)
         }
     } catch (error) {

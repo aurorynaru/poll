@@ -5,21 +5,29 @@ import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRandomName } from '../features/randomName'
-import { setUser, setAddress } from '../features/user/userSlice'
+import { setUser, setAddress, setToken } from '../features/user/userSlice'
 import { getAddress } from '../middleware/midware'
 const Home = () => {
     const name = useSelector((state) => state.user)
     const address = useSelector((state) => state.address)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
+    //edit
     useEffect(() => {
         let isMounted = true
 
         const getAddressFn = async () => {
-            if (isMounted && !address) {
+            if (isMounted) {
                 const addressRes = await getAddress()
-                console.log(addressRes)
+                console.log('Sats')
+                dispatch(
+                    setAddress({
+                        address: addressRes.hash
+                    }),
+                    setToken({
+                        token: addressRes.token
+                    })
+                )
             }
         }
 
@@ -45,8 +53,8 @@ const Home = () => {
         return () => {
             isMounted = false
         }
-    }, [name])
-
+    }, [address])
+    console.log(address)
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
