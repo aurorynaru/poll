@@ -14,33 +14,21 @@ const pool = mysql
     })
     .promise()
 
-export const saveVote = async (address) => {
-    const [res] = await pool.query('INSERT INTO user (ip_address) VALUES (?)', [
-        address
-    ])
-    return res.insertId
-}
-
 export const createPoll = async (title, user_id, expiration, options) => {
-    try {
-        const code = randomCode()
-        const [res] = await pool.query(
-            'INSERT INTO poll (title,user_id,expiration,code) VALUES (?,?,?,?)',
-            [title, user_id, expiration, code]
-        )
+    const code = randomCode()
+    const [res] = await pool.query(
+        'INSERT INTO poll (title,user_id,expiration,code) VALUES (?,?,?,?)',
+        [title, user_id, expiration, code]
+    )
 
-        const pollId = res.insertId
-        createOptions(options, pollId)
+    const pollId = res.insertId
+    createOptions(options, pollId)
 
-        return res.insertId
-    } catch (error) {
-        res.status(409).json({ error: error.message })
-    }
+    return res.insertId
 }
 
 export const createOptions = async (options, pollId) => {
     const dataIdArray = options.map(async (option) => {
-        console.log()
         const { answer } = option
 
         const [res] = await pool.query(
@@ -53,6 +41,23 @@ export const createOptions = async (options, pollId) => {
 
     return dataIdArray
 }
+
+export const getOptions = async (id) => {
+    const [res] = await pool.query(
+        `SELECT * FROM options WHERE options_id = ?`,
+        [id]
+    )
+
+    return res
+}
+
+export const saveVote = async (address) => {
+    const [res] = await pool.query('INSERT INTO user (ip_address) VALUES (?)', [
+        address
+    ])
+    return res.insertId
+}
+
 export const viewPollCode = async (code) => {
     const [res] = await pool.query(`SELECT * FROM poll WHERE code = ?`, [code])
 
@@ -60,7 +65,6 @@ export const viewPollCode = async (code) => {
 }
 
 export const viewPollId = async (id) => {
-    console.log('get poll res', id)
     const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
 
     return res[0]

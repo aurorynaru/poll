@@ -4,13 +4,18 @@ import { createOptions } from '../mysqlPool.js'
 import { createPoll } from '../mysqlPool.js'
 import { viewPollCode } from '../mysqlPool.js'
 import { viewPollId } from '../mysqlPool.js'
+import { getOptions } from '../mysqlPool.js'
 
 export const postPoll = async (req, res) => {
     try {
         const { title, user_id, expiration, options } = req.body
+
         const id = await createPoll(title, user_id, expiration, options)
+        console.log('id', id)
         const pollObj = await viewPollId(id)
-        res.status(201).json({ pollObj })
+        const optionsData = await getOptions(id)
+
+        res.status(201).json({ pollObj, optionsData })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }

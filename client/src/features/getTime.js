@@ -5,7 +5,7 @@ const options = {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    hour12: false
+    hour12: true
 }
 
 export const getTime = (currentDate, timeStamp, time) => {
@@ -25,6 +25,10 @@ export const getTime = (currentDate, timeStamp, time) => {
         default:
             break
     }
+    const formattedDatetime = currentDate
+        .toISOString()
+        .slice(0, 19)
+        .replace('T', ' ')
 
-    return currentDate.toLocaleString('en-CA', options)
+    return formattedDatetime
 }

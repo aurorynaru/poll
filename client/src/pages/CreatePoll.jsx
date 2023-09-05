@@ -81,7 +81,9 @@ const CreatePoll = () => {
             const currentDate = new Date()
             const time = getValues('time')
             const timeStamp = getValues('stamp')
-            setDueTime(getTime(currentDate, timeStamp.name, time))
+            const dateTimeRes = getTime(currentDate, timeStamp.name, time)
+
+            setDueTime(dateTimeRes)
         }, 1000)
 
         return () => {
