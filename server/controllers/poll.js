@@ -9,8 +9,8 @@ export const postPoll = async (req, res) => {
     try {
         const { title, user_id, expiration, options } = req.body
         const id = await createPoll(title, user_id, expiration, options)
-        const pollObj = await viewPoll(id)
-        res.status(201).json(pollObj)
+        const pollObj = await viewPollId(id)
+        res.status(201).json({ pollObj })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }

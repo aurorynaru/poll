@@ -28,8 +28,11 @@ export const createPoll = async (title, user_id, expiration, options) => {
             'INSERT INTO poll (title,user_id,expiration,code) VALUES (?,?,?,?)',
             [title, user_id, expiration, code]
         )
+
         const pollId = res.insertId
         createOptions(options, pollId)
+
+        return res.insertId
     } catch (error) {
         res.status(409).json({ error: error.message })
     }
@@ -37,11 +40,12 @@ export const createPoll = async (title, user_id, expiration, options) => {
 
 export const createOptions = async (options, pollId) => {
     const dataIdArray = options.map(async (option) => {
-        const { poll_option, option_vote } = option
+        console.log()
+        const { answer } = option
 
         const [res] = await pool.query(
-            'INSERT INTO poll (poll_option,option_votes,options_id) VALUES (?,?,?)',
-            [poll_option, option_vote, pollId]
+            'INSERT INTO options (poll_option,options_id) VALUES (?,?)',
+            [answer, pollId]
         )
 
         return res.insertId
@@ -56,6 +60,7 @@ export const viewPollCode = async (code) => {
 }
 
 export const viewPollId = async (id) => {
+    console.log('get poll res', id)
     const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
 
     return res[0]

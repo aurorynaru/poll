@@ -1,2 +1,2 @@
-const PORT = 8888
+const PORT = 7777
 export const ipAddress = `http://localhost:${PORT}`

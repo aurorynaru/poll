@@ -4,57 +4,44 @@ import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRandomName } from '../features/randomName'
-import { setUser, setAddress, setToken } from '../features/user/userSlice'
+import { setToken, setId } from '../features/user/userSlice'
 import { getAddress } from '../middleware/midware'
 const Home = () => {
-    const name = useSelector((state) => state.user)
-    const address = useSelector((state) => state.address)
+    const id = useSelector((state) => state.id)
+    const token = useSelector((state) => state.token)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    //edit
+
     useEffect(() => {
         let isMounted = true
 
         const getAddressFn = async () => {
-            if (isMounted) {
+            if (isMounted && !token && !id) {
                 const addressRes = await getAddress()
-                console.log('Sats')
+
                 dispatch(
-                    setAddress({
-                        address: addressRes.hash
-                    }),
                     setToken({
                         token: addressRes.token
+                    })
+                )
+
+                dispatch(
+                    setId({
+                        id: addressRes.id
                     })
                 )
             }
         }
 
-        if (!address) {
+        if (isMounted && !token && !id) {
             getAddressFn()
         }
-
-        // const getName = async () => {
-        //     const resName = await getRandomName()
-
-        //     if (isMounted && !name) {
-        //         dispatch(
-        //             setUser({
-        //                 user: resName
-        //             })
-        //         )
-        //     }
-        // }
-        // if (!name) {
-        //     getName()
-        // }
 
         return () => {
             isMounted = false
         }
-    }, [address])
-    console.log(address)
+    }, [])
+
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>

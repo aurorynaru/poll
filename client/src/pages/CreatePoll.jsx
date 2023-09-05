@@ -9,6 +9,12 @@ import Error from '../components/Error.jsx'
 import { Message } from 'primereact/message'
 import { ipAddress } from '../address.js'
 import DateComponent from '../components/DateComponent.jsx'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { setToken, setId } from '../features/user/userSlice'
+import { getAddress } from '../middleware/midware'
+import { getTime } from '../features/getTime.js'
+
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
     const [pollAnswer, setPollAnswer] = useState('')
@@ -16,16 +22,10 @@ const CreatePoll = () => {
     const [timeAmount, setTimeAmount] = useState(1)
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
     const [dueTime, setDueTime] = useState(null)
-
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    }
+    const id = useSelector((state) => state.id)
+    const token = useSelector((state) => state.token)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const {
         register,
@@ -47,27 +47,41 @@ const CreatePoll = () => {
     })
 
     useEffect(() => {
+        let isMounted = true
+
+        const getAddressFn = async () => {
+            if (isMounted && !token && !id) {
+                const addressRes = await getAddress()
+
+                dispatch(
+                    setToken({
+                        token: addressRes.token
+                    })
+                )
+
+                dispatch(
+                    setId({
+                        id: addressRes.id
+                    })
+                )
+            }
+        }
+
+        if (isMounted && !token && !id) {
+            getAddressFn()
+        }
+
+        return () => {
+            isMounted = false
+        }
+    }, [])
+
+    useEffect(() => {
         const intervalId = setInterval(() => {
             const currentDate = new Date()
             const time = getValues('time')
             const timeStamp = getValues('stamp')
-            switch (timeStamp.name) {
-                case 'Hours':
-                    currentDate.setHours(currentDate.getHours() + time)
-                    break
-                case 'Minutes':
-                    currentDate.setMinutes(currentDate.getMinutes() + time)
-                    break
-                case 'Days':
-                    currentDate.setDate(currentDate.getDate() + time)
-                    break
-                case 'Seconds':
-                    currentDate.setSeconds(currentDate.getSeconds() + time)
-                    break
-                default:
-                    break
-            }
-            setDueTime(currentDate.toLocaleString('en-CA', options))
+            setDueTime(getTime(currentDate, timeStamp.name, time))
         }, 1000)
 
         return () => {
@@ -117,14 +131,16 @@ const CreatePoll = () => {
             values.title = data.title
             values.expiration = dueTime
             values.options = answersArray
-
-            // const res = await fetch(`${ipAddress}/poll/create`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(values)
-            // })
+            values.user_id = id
+            const res = await fetch(`${ipAddress}/poll/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            })
+            const resData = await res.json()
+            console.log(resData)
         }
     }
 

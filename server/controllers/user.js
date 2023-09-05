@@ -38,7 +38,7 @@ export const getUserId = async (id, address) => {
 
     const token = jwt.sign({ id: res[0].id }, process.env.JWT_SECRET)
 
-    return { token: token, hash: res[0].hash_address }
+    return { token: token, id: res[0].id }
 }
 
 export const user = async (req, res) => {
@@ -50,7 +50,7 @@ export const user = async (req, res) => {
         }
 
         const isMatch = await getUserAddress(address.toString())
-        console.log(isMatch)
+
         if (isMatch === undefined) {
             const userId = await createUser(address.toString())
             const userObj = await getUserId(userId, address.toString())
