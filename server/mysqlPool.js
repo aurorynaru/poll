@@ -2,6 +2,7 @@ import mysql from 'mysql2'
 import dotenv from 'dotenv'
 import { randomCode } from './functions/random.js'
 dotenv.config()
+//poll_option_user_pivot
 const pool = mysql
     .createPool({
         host: process.env.MYSQL_HOST,
