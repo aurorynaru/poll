@@ -8,10 +8,16 @@ import { getOptions } from '../mysqlPool.js'
 
 export const postPoll = async (req, res) => {
     try {
-        const { title, user_id, expiration, options } = req.body
+        const { title, user_id, expiration, options, single_vote } = req.body
+        console.log(req.body)
+        const id = await createPoll(
+            title,
+            user_id,
+            expiration,
+            options,
+            single_vote
+        )
 
-        const id = await createPoll(title, user_id, expiration, options)
-        console.log('id', id)
         const pollObj = await viewPollId(id)
         const optionsData = await getOptions(id)
 

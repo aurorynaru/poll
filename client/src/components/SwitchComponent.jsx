@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { InputSwitch } from 'primereact/inputswitch'
 
-const SwitchComponent = () => {
-    const [checked, setChecked] = useState(true)
-
+const SwitchComponent = ({ checked, setChecked }) => {
     return (
         <div className='card flex justify-content-center'>
             <InputSwitch

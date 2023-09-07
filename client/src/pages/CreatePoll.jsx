@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setToken, setId } from '../features/user/userSlice'
 import { getAddress } from '../middleware/midware'
 import { getTime } from '../features/getTime.js'
+import SwitchComponent from '../components/SwitchComponent.jsx'
 
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
@@ -21,6 +22,7 @@ const CreatePoll = () => {
     const [pollTitle, setPollTitle] = useState('')
     const [timeAmount, setTimeAmount] = useState(1)
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
+    const [checked, setChecked] = useState(true)
     const [dueTime, setDueTime] = useState(null)
     const id = useSelector((state) => state.id)
     const token = useSelector((state) => state.token)
@@ -134,6 +136,11 @@ const CreatePoll = () => {
             values.expiration = dueTime
             values.options = answersArray
             values.user_id = id
+            if (checked) {
+                values.single_vote = 1
+            } else {
+                values.single_vote = 0
+            }
             const res = await fetch(`${ipAddress}/poll/create`, {
                 method: 'POST',
                 headers: {
@@ -194,9 +201,15 @@ const CreatePoll = () => {
                 </div>
 
                 <Divider align='center'>
-                    <span className='text-lg px-3 py-2 font-medium'>
-                        Add your answers below
-                    </span>
+                    <div className='flex align-items-center justify-content-center'>
+                        <span className='text-lg px-3 py-2 font-medium'>
+                            Single answer poll
+                        </span>
+                        <SwitchComponent
+                            checked={checked}
+                            setChecked={setChecked}
+                        />
+                    </div>
                 </Divider>
                 <div className='flex w-full justify-content-center align-items-center border gap-3'>
                     <FormInput

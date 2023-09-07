@@ -15,13 +15,19 @@ const pool = mysql
     })
     .promise()
 
-export const createPoll = async (title, user_id, expiration, options) => {
+export const createPoll = async (
+    title,
+    user_id,
+    expiration,
+    options,
+    single_vote
+) => {
     const code = randomCode()
     const [res] = await pool.query(
-        'INSERT INTO poll (title,user_id,expiration,code) VALUES (?,?,?,?)',
-        [title, user_id, expiration, code]
+        'INSERT INTO poll (title,user_id,expiration,code,single_vote) VALUES (?,?,?,?,?)',
+        [title, user_id, expiration, code, single_vote]
     )
-
+    console.log('satas')
     const pollId = res.insertId
     createOptions(options, pollId)
 
@@ -69,6 +75,14 @@ export const viewPollId = async (id) => {
     const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
 
     return res[0]
+}
+
+export const setPivot = async (user_id, options_id, poll_id) => {
+    const [res] = await pool.query(
+        ` INSERT INTO poll_option_user_pivot (user_id,options_id,poll_id) VALUES (?,?,?)`,
+        [user_id, options_id, poll_id]
+    )
+    return res.insertId
 }
 
 export default pool
