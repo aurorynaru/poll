@@ -1,6 +1,5 @@
 import redisClient from '../redisClient.js'
 import pool from '../mysqlPool.js'
-import { createOptions } from '../mysqlPool.js'
 import { createPoll } from '../mysqlPool.js'
 import { viewPollCode } from '../mysqlPool.js'
 import { viewPollId } from '../mysqlPool.js'
@@ -9,7 +8,7 @@ import { getOptions } from '../mysqlPool.js'
 export const postPoll = async (req, res) => {
     try {
         const { title, user_id, expiration, options, single_vote } = req.body
-        console.log(req.body)
+
         const id = await createPoll(
             title,
             user_id,
@@ -21,7 +20,11 @@ export const postPoll = async (req, res) => {
         const pollObj = await viewPollId(id)
         const optionsData = await getOptions(id)
 
-        res.status(201).json({ pollObj, optionsData })
+        res.status(201).json({
+            code: pollObj.code,
+            poll_id: pollObj.id,
+            user_id: pollObj.user_id
+        })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }

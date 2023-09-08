@@ -27,7 +27,7 @@ export const createPoll = async (
         'INSERT INTO poll (title,user_id,expiration,code,single_vote) VALUES (?,?,?,?,?)',
         [title, user_id, expiration, code, single_vote]
     )
-    console.log('satas')
+
     const pollId = res.insertId
     createOptions(options, pollId)
 
@@ -58,10 +58,20 @@ export const getOptions = async (id) => {
     return res
 }
 
-export const saveVote = async (address) => {
-    const [res] = await pool.query('INSERT INTO user (ip_address) VALUES (?)', [
-        address
-    ])
+export const saveVote = async (id) => {
+    const [optionsData] = await pool.query(
+        `SELECT * FROM options WHERE id = ?`,
+        [id]
+    )
+
+    const option = [optionsData][0]
+
+    const newData = option.option_votes++
+
+    const [res] = await pool.query(
+        `UPDATE options SET salary = ? WHERE id = ?`,
+        [newData, id]
+    )
     return res.insertId
 }
 
@@ -75,14 +85,6 @@ export const viewPollId = async (id) => {
     const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
 
     return res[0]
-}
-
-export const setPivot = async (user_id, options_id, poll_id) => {
-    const [res] = await pool.query(
-        ` INSERT INTO poll_option_user_pivot (user_id,options_id,poll_id) VALUES (?,?,?)`,
-        [user_id, options_id, poll_id]
-    )
-    return res.insertId
 }
 
 export default pool
