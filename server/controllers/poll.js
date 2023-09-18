@@ -42,12 +42,14 @@ export const postPoll = async (req, res) => {
 export const viewPoll = async (req, res) => {
     try {
         const { code } = req.params
-        const poll = viewPollCode(code)
+
+        const poll = await viewPollCode(code)
+        const options = await getOptions(poll.id)
         if (!poll) {
             throw new Error('No poll found')
         }
-
-        res.status(200).json(poll)
+        console.log(poll)
+        res.status(200).json({ poll, options })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }

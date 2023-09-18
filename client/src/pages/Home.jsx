@@ -11,6 +11,7 @@ const Home = () => {
     const token = useSelector((state) => state.token)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [code, setCode] = useState('')
 
     useEffect(() => {
         let isMounted = true
@@ -62,6 +63,8 @@ const Home = () => {
                     </div>
                     <div className='flex align-items-center justify-content-center'>
                         <InputText
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
                             id='code'
                             type='text'
                             placeholder='ABC123'
@@ -70,6 +73,13 @@ const Home = () => {
                     </div>
                     <div className='flex align-items-center justify-content-evenly mb-2 '>
                         <Button
+                            onClick={() => {
+                                if (code && code.length == 6) {
+                                    navigate(`/poll/${code}`)
+                                } else {
+                                    console.log('invalid code')
+                                }
+                            }}
                             label='Join poll'
                             icon='pi pi-search'
                             className='w-3'
