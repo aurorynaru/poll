@@ -5,5 +5,6 @@ const router = express.Router()
 
 router.post('/create', postPoll)
 router.get('/:code', viewPoll)
+router.post('/vote', viewPoll)
 
 export default router

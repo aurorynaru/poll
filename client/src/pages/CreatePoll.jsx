@@ -203,12 +203,12 @@ const CreatePoll = () => {
                 <Divider align='center'>
                     <div className='flex align-items-center justify-content-center'>
                         <span className='text-lg px-3 py-2 font-medium'>
-                            Single answer poll
+                            Input Poll Answers Below
                         </span>
-                        <SwitchComponent
+                        {/* <SwitchComponent
                             checked={checked}
                             setChecked={setChecked}
-                        />
+                        /> */}
                     </div>
                 </Divider>
                 <div className='flex w-full justify-content-center align-items-center border gap-3'>

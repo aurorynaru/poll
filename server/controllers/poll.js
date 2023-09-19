@@ -1,9 +1,11 @@
 import redisClient from '../redisClient.js'
-import pool from '../mysqlPool.js'
-import { createPoll } from '../mysqlPool.js'
-import { viewPollCode } from '../mysqlPool.js'
-import { viewPollId } from '../mysqlPool.js'
-import { getOptions } from '../mysqlPool.js'
+import pool, {
+    saveVote,
+    createPoll,
+    viewPollCode,
+    viewPollId,
+    getOptions
+} from '../mysqlPool.js'
 
 export const postPoll = async (req, res) => {
     try {
@@ -30,14 +32,18 @@ export const postPoll = async (req, res) => {
     }
 }
 
-// export const postOptions = async (req, res) => {
-//     try {
-//         const { options, pollId } = req.body
-//         createOptions(options, pollId)
-//     } catch (error) {
-//         res.status(409).json({ error: error.message })
-//     }
-// }
+export const votePoll = async (req, res) => {
+    try {
+        const { userId, optionsId, pollId, code } = req.body
+        await saveVote(userId, optionsId, pollId)
+        const poll = await viewPollCode(code)
+        const options = await getOptions(poll.id)
+
+        res.status(200).json({ poll, options })
+    } catch (error) {
+        res.status(409).json({ error: error.message })
+    }
+}
 
 export const viewPoll = async (req, res) => {
     try {
@@ -48,11 +54,9 @@ export const viewPoll = async (req, res) => {
         if (!poll) {
             throw new Error('No poll found')
         }
-        console.log(poll)
+
         res.status(200).json({ poll, options })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }
 }
-
-export const saveVote = async (req, res) => {}

@@ -13,7 +13,7 @@ const AnswerComponent = ({ answer, value, totalVotes, isDisabled = false }) => {
             </React.Fragment>
         )
     }
-
+    //edit
     return (
         <div className='card flex-column justify-content-center gap-2'>
             <div className='flex flex-column mb-3'>
