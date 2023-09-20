@@ -9,6 +9,7 @@ const VotePage = () => {
     const [ansElement, setAnsElement] = useState(null)
     const [answerArr, setAnswerArr] = useState([])
     const [pollArr, setPollArr] = useState([])
+    const [pivot, setPivot] = useState([])
 
     // const answerArr = [
     //     {
@@ -38,6 +39,7 @@ const VotePage = () => {
             const res = await fetch(`${ipAddress}/poll/${code}`)
             const resData = await res.json()
             if (resData) {
+                setPivot(resData.isVote)
                 setAnswerArr(resData.options)
                 setPollArr(resData.poll)
             }
@@ -92,6 +94,8 @@ const VotePage = () => {
         }
     }, [answerArr])
     console.log(pollArr)
+    console.log(answerArr)
+    console.log(pivot)
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>
             <div className='sat'>

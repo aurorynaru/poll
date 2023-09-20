@@ -58,6 +58,15 @@ export const getOptions = async (id) => {
     return res
 }
 
+export const checkVoted = async (userId, optionsId, pollId) => {
+    const isVoted = await pool.query(
+        `SELECT * FROM poll_option_user_pivot WHERE user_id = ? AND options_id = ? AND poll_id = ?`,
+        [userId, optionsId, pollId]
+    )
+
+    return isVoted
+}
+
 export const addVote = async (optionsId, data) => {
     await pool.query(`UPDATE options SET option_votes = ? WHERE id = ?`, [
         data,
@@ -87,10 +96,7 @@ export const saveVote = async (userId, optionsId, pollId) => {
 
         const addData = option.option_votes++
 
-        const isVoted = await pool.query(
-            `SELECT * FROM poll_option_user_pivot WHERE user_id = ? AND options_id = ? AND poll_id = ?`,
-            [userId, optionsId, pollId]
-        )
+        const isVoted = checkVoted(userId, optionsId, pollId)
 
         //save vote +1
         if (isVoted.length < 1) {

@@ -4,7 +4,8 @@ import pool, {
     createPoll,
     viewPollCode,
     viewPollId,
-    getOptions
+    getOptions,
+    checkVoted
 } from '../mysqlPool.js'
 
 export const postPoll = async (req, res) => {
@@ -51,11 +52,12 @@ export const viewPoll = async (req, res) => {
 
         const poll = await viewPollCode(code)
         const options = await getOptions(poll.id)
+        const [isVote] = await checkVoted(poll.user_id, options.id, poll.id)
         if (!poll) {
             throw new Error('No poll found')
         }
 
-        res.status(200).json({ poll, options })
+        res.status(200).json({ poll, options, isVote })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }
