@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
-import { ToggleButton } from 'primereact/togglebutton'
+import React, { useEffect, useState } from 'react'
+import { Button } from 'primereact/button'
 import { ProgressBar } from 'primereact/progressbar'
 
-const AnswerComponent = ({ answer, value, totalVotes, isDisabled = false }) => {
+const AnswerComponent = ({
+    value,
+    totalVotes,
+    answer,
+    isSelected,
+    setIsSelected,
+    index
+}) => {
     const percentage = ((value / totalVotes) * 100).toFixed(0)
-    const [checked, setChecked] = useState(false)
-
+    const [elem, setElem] = useState()
     const valueTemplate = (value) => {
         return (
             <React.Fragment>
@@ -13,27 +19,46 @@ const AnswerComponent = ({ answer, value, totalVotes, isDisabled = false }) => {
             </React.Fragment>
         )
     }
+
+    useEffect(() => {
+        const setAnsElem = () => {
+            return (
+                <>
+                    <div className='flex flex-column mb-3'>
+                        <Button
+                            className={`outlined hover:bg-primary text-md  ${
+                                isSelected === index ? 'bg-primary' : ''
+                            }`}
+                            label={answer}
+                            text
+                            raised
+                            tooltip={`click to vote ${answer}`}
+                            tooltipOptions={{ position: 'top' }}
+                            onClick={() => {
+                                setIsSelected(index)
+                            }}
+                        />
+                    </div>
+                    <div className='flex  flex-column mb-3'>
+                        <ProgressBar
+                            value={percentage}
+                            displayValueTemplate={valueTemplate}
+                        ></ProgressBar>
+                    </div>
+                </>
+            )
+        }
+
+        setAnsElem()
+        setElem(setAnsElem)
+    }, [index, isSelected])
     //edit
+    console.log(index)
+    console.log('yo', isSelected)
+
     return (
         <div className='card flex-column justify-content-center gap-2'>
-            <div className='flex flex-column mb-3'>
-                <ToggleButton
-                    disabled={isDisabled ? true : false}
-                    onLabel={answer}
-                    offLabel={answer}
-                    onIcon='pi pi-times'
-                    offIcon='pi pi-check'
-                    checked={checked}
-                    onChange={(e) => setChecked(e.value)}
-                    className='w-fit hover hover:bg-primary'
-                />
-            </div>
-            <div className='flex  flex-column mb-3'>
-                <ProgressBar
-                    value={percentage}
-                    displayValueTemplate={valueTemplate}
-                ></ProgressBar>
-            </div>
+            {elem}{' '}
         </div>
     )
 }

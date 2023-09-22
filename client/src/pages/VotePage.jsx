@@ -11,6 +11,8 @@ const VotePage = () => {
     const [pollArr, setPollArr] = useState([])
     const [pivot, setPivot] = useState([])
 
+    const [isSelected, setIsSelected] = useState(null)
+
     // const answerArr = [
     //     {
     //         id: 1,
@@ -73,11 +75,13 @@ const VotePage = () => {
         let sub = true
 
         if (sub) {
-            const answerElement = answerArr.map((answer) => {
+            const answerElement = answerArr.map((answer, index) => {
                 return (
                     <div key={answer.id} className='flex flex-column gap-2'>
                         <AnswerComponent
-                            key={answer.id}
+                            index={index}
+                            isSelected={isSelected}
+                            setIsSelected={setIsSelected}
                             answer={answer.poll_option}
                             value={answer.option_votes}
                             totalVotes={totalVotes}
@@ -92,10 +96,10 @@ const VotePage = () => {
         return () => {
             sub = false
         }
-    }, [answerArr])
-    console.log(pollArr)
-    console.log(answerArr)
-    console.log(pivot)
+    }, [answerArr, isSelected])
+    // console.log(pollArr)
+    //console.log(answerArr)
+    // console.log(pivot)
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>
             <div className='sat'>
