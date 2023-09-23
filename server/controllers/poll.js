@@ -32,15 +32,15 @@ export const postPoll = async (req, res) => {
         res.status(409).json({ error: error.message })
     }
 }
-
+//test save res
 export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
-        await saveVote(userId, optionsId, pollId)
-        const poll = await viewPollCode(code)
-        const options = await getOptions(poll.id)
+        // await saveVote(userId, optionsId, pollId)
+        // const poll = await viewPollCode(code)
+        // const options = await getOptions(poll.id)
 
-        res.status(200).json({ poll, options })
+        res.status(200).json({ userId, optionsId, pollId, code })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }

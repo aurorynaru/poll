@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import { ProgressBar } from 'primereact/progressbar'
+import { debounce } from '../features/debounce'
 
 const AnswerComponent = ({
     value,
@@ -8,7 +9,8 @@ const AnswerComponent = ({
     answer,
     isSelected,
     setIsSelected,
-    index
+    index,
+    saveVoteFn
 }) => {
     const percentage = ((value / totalVotes) * 100).toFixed(0)
     const [elem, setElem] = useState()
@@ -19,6 +21,16 @@ const AnswerComponent = ({
             </React.Fragment>
         )
     }
+
+    const debounceFn = debounce(() => {
+        const data = {
+            userId: 'testUserId',
+            optionsId: 'testOptionsId',
+            pollId: 'testPollId',
+            code: 'testcode'
+        }
+        saveVoteFn(data)
+    }, 300)
 
     useEffect(() => {
         const setAnsElem = () => {
@@ -35,7 +47,7 @@ const AnswerComponent = ({
                             tooltip={`click to vote ${answer}`}
                             tooltipOptions={{ position: 'top' }}
                             onClick={() => {
-                                setIsSelected(index)
+                                debounceFn()
                             }}
                         />
                     </div>
@@ -53,8 +65,6 @@ const AnswerComponent = ({
         setElem(setAnsElem)
     }, [index, isSelected])
     //edit
-    console.log(index)
-    console.log('yo', isSelected)
 
     return (
         <div className='card flex-column justify-content-center gap-2'>

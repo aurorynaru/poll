@@ -13,40 +13,34 @@ const VotePage = () => {
 
     const [isSelected, setIsSelected] = useState(null)
 
-    // const answerArr = [
-    //     {
-    //         id: 1,
-    //         votes: 200,
-    //         answer: 'Sats1'
-    //     },
-    //     {
-    //         id: 2,
-    //         votes: 437,
-    //         answer: 'Sats2'
-    //     },
-    //     {
-    //         id: 3,
-    //         votes: 640,
-    //         answer: 'Sats3'
-    //     },
-    //     {
-    //         id: 4,
-    //         votes: 177,
-    //         answer: 'Sats4'
-    //     }
-    // ]
+    const getPollFn = async () => {
+        const res = await fetch(`${ipAddress}/poll/${code}`)
+        const resData = await res.json()
+        if (resData) {
+            setPivot(resData.isVote)
+            setAnswerArr(resData.options)
+            setPollArr(resData.poll)
+        }
+    }
+
+    const saveVoteFn = async (data) => {
+        const res = await fetch(`${ipAddress}/poll/vote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        if (res.status === 200) {
+            const resData = await res.json()
+
+            console.log(resData)
+        } else {
+            console.log('Error:', res.status)
+        }
+    }
 
     useEffect(() => {
-        const getPollFn = async () => {
-            const res = await fetch(`${ipAddress}/poll/${code}`)
-            const resData = await res.json()
-            if (resData) {
-                setPivot(resData.isVote)
-                setAnswerArr(resData.options)
-                setPollArr(resData.poll)
-            }
-        }
-
         getPollFn()
     }, [code])
 
@@ -79,6 +73,7 @@ const VotePage = () => {
                 return (
                     <div key={answer.id} className='flex flex-column gap-2'>
                         <AnswerComponent
+                            saveVoteFn={saveVoteFn}
                             index={index}
                             isSelected={isSelected}
                             setIsSelected={setIsSelected}
