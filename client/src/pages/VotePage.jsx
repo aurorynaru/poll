@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import AnswerComponent from '../components/AnswerComponent'
 import { ipAddress } from '../address'
 import { useParams } from 'react-router-dom'
+import { debounce } from '../features/debounce'
 
 const VotePage = () => {
     const { code } = useParams()
@@ -9,7 +10,8 @@ const VotePage = () => {
     const [ansElement, setAnsElement] = useState(null)
     const [answerArr, setAnswerArr] = useState([])
     const [pollArr, setPollArr] = useState([])
-    const [pivot, setPivot] = useState([])
+    const [isVoted, setIsVoted] = useState(true)
+    const [optionId, setOptionId] = useState(null)
 
     const [isSelected, setIsSelected] = useState(null)
 
@@ -17,7 +19,7 @@ const VotePage = () => {
         const res = await fetch(`${ipAddress}/poll/${code}`)
         const resData = await res.json()
         if (resData) {
-            setPivot(resData.isVote)
+            setIsVoted(resData.isVoted)
             setAnswerArr(resData.options)
             setPollArr(resData.poll)
         }
@@ -44,7 +46,6 @@ const VotePage = () => {
         getPollFn()
     }, [code])
 
-    //edit
     useEffect(() => {
         let sub = true
 
@@ -65,6 +66,15 @@ const VotePage = () => {
         }
     }, [answerArr])
 
+    const saveVoteDB = debounce(() => {
+        saveVoteFn({
+            userId: pollArr.use_id,
+            optionsId: optionId,
+            pollId: pollArr.id,
+            code: pollArr.code
+        })
+    }, 300)
+
     useEffect(() => {
         let sub = true
 
@@ -73,7 +83,9 @@ const VotePage = () => {
                 return (
                     <div key={answer.id} className='flex flex-column gap-2'>
                         <AnswerComponent
-                            saveVoteFn={saveVoteFn}
+                            setOptionId={setOptionId}
+                            answerId={answer.id}
+                            saveVoteDB={saveVoteDB}
                             index={index}
                             isSelected={isSelected}
                             setIsSelected={setIsSelected}
@@ -92,9 +104,7 @@ const VotePage = () => {
             sub = false
         }
     }, [answerArr, isSelected])
-    // console.log(pollArr)
-    //console.log(answerArr)
-    // console.log(pivot)
+
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>
             <div className='sat'>

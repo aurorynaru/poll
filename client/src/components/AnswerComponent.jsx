@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import { ProgressBar } from 'primereact/progressbar'
-import { debounce } from '../features/debounce'
 
 const AnswerComponent = ({
     value,
@@ -10,7 +9,9 @@ const AnswerComponent = ({
     isSelected,
     setIsSelected,
     index,
-    saveVoteFn
+    saveVoteDB,
+    answerId,
+    setOptionId
 }) => {
     const percentage = ((value / totalVotes) * 100).toFixed(0)
     const [elem, setElem] = useState()
@@ -21,16 +22,6 @@ const AnswerComponent = ({
             </React.Fragment>
         )
     }
-
-    const debounceFn = debounce(() => {
-        const data = {
-            userId: 'testUserId',
-            optionsId: 'testOptionsId',
-            pollId: 'testPollId',
-            code: 'testcode'
-        }
-        saveVoteFn(data)
-    }, 300)
 
     useEffect(() => {
         const setAnsElem = () => {
@@ -47,7 +38,8 @@ const AnswerComponent = ({
                             tooltip={`click to vote ${answer}`}
                             tooltipOptions={{ position: 'top' }}
                             onClick={() => {
-                                debounceFn()
+                                setOptionId(answerId)
+                                saveVoteDB()
                             }}
                         />
                     </div>

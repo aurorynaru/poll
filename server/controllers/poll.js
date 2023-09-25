@@ -37,6 +37,11 @@ export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
         // await saveVote(userId, optionsId, pollId)
+        // const [isVote] = await checkVoted(poll.user_id, options.id, poll.id)
+        // let isVoted = false
+        // if (isVote.length > 0) {
+        //     isVoted = true
+        // }
         // const poll = await viewPollCode(code)
         // const options = await getOptions(poll.id)
 
@@ -53,11 +58,16 @@ export const viewPoll = async (req, res) => {
         const poll = await viewPollCode(code)
         const options = await getOptions(poll.id)
         const [isVote] = await checkVoted(poll.user_id, options.id, poll.id)
+        let isVoted = false
+
+        if (isVote.length > 0) {
+            isVoted = true
+        }
         if (!poll) {
             throw new Error('No poll found')
         }
 
-        res.status(200).json({ poll, options, isVote })
+        res.status(200).json({ poll, options, isVoted })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }
