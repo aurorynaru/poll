@@ -60,8 +60,8 @@ export const getOptions = async (id) => {
 
 export const checkVoted = async (userId, optionsId, pollId) => {
     const isVoted = await pool.query(
-        `SELECT * FROM poll_option_user_pivot WHERE user_id = ? AND options_id = ? AND poll_id = ?`,
-        [userId, optionsId, pollId]
+        `SELECT * FROM poll_option_user_pivot WHERE user_id = ?  AND poll_id = ?`,
+        [userId, pollId]
     )
 
     return isVoted
@@ -92,16 +92,16 @@ export const saveVote = async (userId, optionsId, pollId) => {
             [optionsId]
         )
 
-        const option = [optionsData][0]
+        const [option] = [optionsData][0]
 
-        const addData = option.option_votes++
+        const addData = option.option_votes + 1
 
-        const isVoted = checkVoted(userId, optionsId, pollId)
+        const [isVoted] = await checkVoted(userId, optionsId, pollId)
 
         //save vote +1
         if (isVoted.length < 1) {
             await pool.query(
-                'INSERT INTO poll (user_id,options_id,poll_id) VALUES (?,?,?)',
+                'INSERT INTO poll_option_user_pivot (user_id,options_id,poll_id) VALUES (?,?,?)',
                 [userId, optionsId, pollId]
             )
 
@@ -110,14 +110,14 @@ export const saveVote = async (userId, optionsId, pollId) => {
             return
         }
         //else change vote and remove old vote
-
+        // change old save/pivot
         const oldVote = await pool.query(
             `SELECT * FROM poll_option_user_pivot WHERE user_id = ?  AND poll_id = ?`,
             [userId, pollId]
         )
 
-        const minusData = oldVote[0].options_id--
-
+        const minusData = oldVote[0].options_id - 1
+        console.log(minusData)
         await minusVote(oldVote[0].options_id, minusData)
         await addVote(optionsId, addData)
 

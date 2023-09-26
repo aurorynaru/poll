@@ -9,9 +9,9 @@ const AnswerComponent = ({
     isSelected,
     setIsSelected,
     index,
-    saveVoteDB,
     answerId,
-    setOptionId
+    setOptionId,
+    saveVoteDB
 }) => {
     const percentage = ((value / totalVotes) * 100).toFixed(0)
     const [elem, setElem] = useState()
@@ -30,7 +30,7 @@ const AnswerComponent = ({
                     <div className='flex flex-column mb-3'>
                         <Button
                             className={`outlined hover:bg-primary text-md  ${
-                                isSelected === index ? 'bg-primary' : ''
+                                isSelected == answerId ? 'bg-primary' : ''
                             }`}
                             label={answer}
                             text
@@ -38,8 +38,9 @@ const AnswerComponent = ({
                             tooltip={`click to vote ${answer}`}
                             tooltipOptions={{ position: 'top' }}
                             onClick={() => {
+                                setIsSelected(answerId)
+                                saveVoteDB(answerId)
                                 setOptionId(answerId)
-                                saveVoteDB()
                             }}
                         />
                     </div>

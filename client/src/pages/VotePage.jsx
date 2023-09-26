@@ -24,7 +24,7 @@ const VotePage = () => {
             setPollArr(resData.poll)
         }
     }
-
+    //checkvote
     const saveVoteFn = async (data) => {
         const res = await fetch(`${ipAddress}/poll/vote`, {
             method: 'POST',
@@ -36,7 +36,9 @@ const VotePage = () => {
         if (res.status === 200) {
             const resData = await res.json()
 
-            console.log(resData)
+            setIsVoted(resData.isVoted)
+            setAnswerArr(resData.options)
+            setPollArr(resData.poll)
         } else {
             console.log('Error:', res.status)
         }
@@ -66,10 +68,10 @@ const VotePage = () => {
         }
     }, [answerArr])
 
-    const saveVoteDB = debounce(() => {
+    const saveVoteDB = debounce((answerId) => {
         saveVoteFn({
-            userId: pollArr.use_id,
-            optionsId: optionId,
+            userId: pollArr.user_id,
+            optionsId: answerId,
             pollId: pollArr.id,
             code: pollArr.code
         })
@@ -87,7 +89,7 @@ const VotePage = () => {
                             answerId={answer.id}
                             saveVoteDB={saveVoteDB}
                             index={index}
-                            isSelected={isSelected}
+                            isSelected={isVoted ? isVoted : isSelected}
                             setIsSelected={setIsSelected}
                             answer={answer.poll_option}
                             value={answer.option_votes}
@@ -103,7 +105,7 @@ const VotePage = () => {
         return () => {
             sub = false
         }
-    }, [answerArr, isSelected])
+    }, [answerArr, isSelected, optionId])
 
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>
