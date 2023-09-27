@@ -19,7 +19,7 @@ const VotePage = () => {
         const res = await fetch(`${ipAddress}/poll/${code}`)
         const resData = await res.json()
         if (resData) {
-            setIsVoted(resData.isVoted)
+            setIsVoted(resData.selectedAnsId)
             setAnswerArr(resData.options)
             setPollArr(resData.poll)
         }
@@ -36,7 +36,7 @@ const VotePage = () => {
         if (res.status === 200) {
             const resData = await res.json()
 
-            setIsVoted(resData.isVoted)
+            setIsVoted(resData.selectedAnsId)
             setAnswerArr(resData.options)
             setPollArr(resData.poll)
         } else {

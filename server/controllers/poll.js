@@ -37,17 +37,17 @@ export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
 
+        const poll = await viewPollCode(code)
         await saveVote(userId, optionsId, pollId)
-        const [isVote] = await checkVoted(poll.user_id, options.id, poll.id)
+        const [isVote] = await checkVoted(poll.user_id, poll.id)
         let selectedAnsId = 0
 
         if (isVote.length > 0) {
-            selectedAnsId = isVote.id
+            selectedAnsId = isVote[0].options_id
         }
         if (!poll) {
             throw new Error('No poll found')
         }
-        const poll = await viewPollCode(code)
         const options = await getOptions(poll.id)
 
         res.status(200).json({ poll, options, selectedAnsId })
@@ -62,16 +62,17 @@ export const viewPoll = async (req, res) => {
 
         const poll = await viewPollCode(code)
         const options = await getOptions(poll.id)
-        const [isVote] = await checkVoted(poll.user_id, options.id, poll.id)
+        const [isVote] = await checkVoted(poll.user_id, poll.id)
+
         let selectedAnsId = 0
 
         if (isVote.length > 0) {
-            selectedAnsId = isVote.id
+            selectedAnsId = isVote[0].options_id
         }
         if (!poll) {
             throw new Error('No poll found')
         }
-
+        console.log(selectedAnsId)
         res.status(200).json({ poll, options, selectedAnsId })
     } catch (error) {
         res.status(409).json({ error: error.message })

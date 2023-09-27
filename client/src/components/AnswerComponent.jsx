@@ -29,7 +29,7 @@ const AnswerComponent = ({
                 <>
                     <div className='flex flex-column mb-3'>
                         <Button
-                            className={`outlined hover:bg-primary text-md  ${
+                            className={`outline hover:bg-primary text-md  ${
                                 isSelected == answerId ? 'bg-primary' : ''
                             }`}
                             label={answer}

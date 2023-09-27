@@ -58,31 +58,56 @@ export const getOptions = async (id) => {
     return res
 }
 
-export const checkVoted = async (userId, optionsId, pollId) => {
-    const isVoted = await pool.query(
-        `SELECT * FROM poll_option_user_pivot WHERE user_id = ?  AND poll_id = ?`,
-        [userId, pollId]
-    )
+export const checkVoted = async (userId, pollId) => {
+    try {
+        const isVoted = await pool.query(
+            `SELECT * FROM poll_option_user_pivot WHERE user_id = ?  AND poll_id = ?`,
+            [userId, pollId]
+        )
 
-    return isVoted
+        return isVoted
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }
 
 export const addVote = async (optionsId, data) => {
-    await pool.query(`UPDATE options SET option_votes = ? WHERE id = ?`, [
-        data,
-        optionsId
-    ])
+    try {
+        await pool.query(`UPDATE options SET option_votes = ? WHERE id = ?`, [
+            data,
+            optionsId
+        ])
 
-    return
+        return
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }
 
 export const minusVote = async (optionsId, data) => {
-    await pool.query(`UPDATE options SET option_votes = ? WHERE id = ?`, [
-        data,
-        optionsId
-    ])
+    try {
+        await pool.query(`UPDATE options SET option_votes = ? WHERE id = ?`, [
+            data,
+            optionsId
+        ])
 
-    return
+        return
+    } catch (error) {
+        throw new Error(error.message)
+    }
+}
+
+export const updatePivot = async (newOptionsId, pivotId) => {
+    try {
+        await pool.query(
+            `UPDATE poll_option_user_pivot SET options_id = ? WHERE id = ?`,
+            [newOptionsId, pivotId]
+        )
+
+        return
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }
 
 export const saveVote = async (userId, optionsId, pollId) => {
@@ -93,12 +118,9 @@ export const saveVote = async (userId, optionsId, pollId) => {
         )
 
         const [option] = [optionsData][0]
-
         const addData = option.option_votes + 1
+        const [isVoted] = await checkVoted(userId, pollId)
 
-        const [isVoted] = await checkVoted(userId, optionsId, pollId)
-
-        //save vote +1
         if (isVoted.length < 1) {
             await pool.query(
                 'INSERT INTO poll_option_user_pivot (user_id,options_id,poll_id) VALUES (?,?,?)',
@@ -109,27 +131,33 @@ export const saveVote = async (userId, optionsId, pollId) => {
 
             return
         }
-        //else change vote and remove old vote
-        // change old save/pivot
-        const oldVote = await pool.query(
+
+        const [getOldVote] = await pool.query(
             `SELECT * FROM poll_option_user_pivot WHERE user_id = ?  AND poll_id = ?`,
             [userId, pollId]
         )
+        const pivotId = getOldVote[0].id
+        const oldVoteId = getOldVote[0].options_id
+        if (oldVoteId === optionsId) {
+            return
+        }
 
-        const minusData = oldVote[0].options_id - 1
-        console.log(minusData)
-        await minusVote(oldVote[0].options_id, minusData)
+        await updatePivot(optionsId, pivotId)
+        const [optionsDataMinus] = await pool.query(
+            `SELECT * FROM options WHERE id = ?`,
+            [oldVoteId]
+        )
+        const [optionMinus] = [optionsDataMinus][0]
+        let minusData
+        if (optionMinus.option_votes > 0) {
+            minusData = optionMinus.option_votes - 1
+        }
+        minusData = 0
+
+        await minusVote(oldVoteId, minusData)
+
         await addVote(optionsId, addData)
 
-        await pool.query(
-            `UPDATE options SET options_id = ? WHERE user_id = ? AND poll_id = ?  `,
-            [optionsId, userId, pollId]
-        )
-
-        await pool.query(`UPDATE options SET salary = ? WHERE id = ?`, [
-            newData,
-            id
-        ])
         return
     } catch (error) {}
 }
