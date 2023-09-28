@@ -48,7 +48,7 @@ export const user = async (req, res) => {
         if (!address || address === '::1') {
             address = '127.0.0.1'
         }
-
+        console.log(address)
         const isMatch = await getUserAddress(address.toString())
 
         if (isMatch === undefined) {

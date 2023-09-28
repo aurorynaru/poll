@@ -42,6 +42,6 @@ const PORT = process.env.PORT || 7777
 app.use('/', getAddress)
 app.use('/poll', poll)
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`)
 })
