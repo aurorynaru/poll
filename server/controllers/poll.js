@@ -7,6 +7,7 @@ import pool, {
     getOptions,
     checkVoted
 } from '../mysqlPool.js'
+import { io } from '../index.js'
 
 export const postPoll = async (req, res) => {
     try {
@@ -49,6 +50,8 @@ export const votePoll = async (req, res) => {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
+
+        io.emit('pollUpdate', { poll, options, selectedAnsId })
 
         res.status(200).json({ poll, options, selectedAnsId })
     } catch (error) {

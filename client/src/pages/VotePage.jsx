@@ -3,6 +3,7 @@ import AnswerComponent from '../components/AnswerComponent'
 import { ipAddress } from '../address'
 import { useParams } from 'react-router-dom'
 import { debounce } from '../features/debounce'
+import socketIOClient from 'socket.io-client'
 
 const VotePage = () => {
     const { code } = useParams()
@@ -25,6 +26,24 @@ const VotePage = () => {
         }
     }
     //checkvote
+
+    useEffect(() => {
+        const socket = socketIOClient(ipAddress)
+
+        socket.on('connect', () => {
+            console.log('Connected to server')
+        })
+
+        socket.on('pollUpdate', (updatedPollData) => {
+            setIsVoted(updatedPollData.selectedAnsId)
+            setAnswerArr(updatedPollData.options)
+            setPollArr(updatedPollData.poll)
+        })
+
+        return () => {
+            socket.disconnect()
+        }
+    }, [])
     const saveVoteFn = async (data) => {
         const res = await fetch(`${ipAddress}/poll/vote`, {
             method: 'POST',
@@ -35,10 +54,6 @@ const VotePage = () => {
         })
         if (res.status === 200) {
             const resData = await res.json()
-
-            setIsVoted(resData.selectedAnsId)
-            setAnswerArr(resData.options)
-            setPollArr(resData.poll)
         } else {
             console.log('Error:', res.status)
         }

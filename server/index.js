@@ -17,23 +17,27 @@ app.use(cors())
 app.use(express.json())
 
 const httpServer = createServer(app)
-export const io = new Server(httpServer)
+export const io = new Server(httpServer, { cors: { origin: '*' } })
 
-const PORT = process.env.PORT
+io.on('connection', (socket) => {
+    console.log('Client connected')
 
-// app.post('/api/address', async (req, res) => {
-//     try {
-//         const ip = requestIp.getClientIp(req)
-//         if (!ip) {
-//             throw new Error('something went wrong')
-//         }
-//         req.clientIp = ip
+    const redisChannel = 'pollUpdates'
+    redisClient.subscribe(redisChannel)
 
-//         res.status(201).json(ip)
-//     } catch (error) {
-//         res.status(409).json({ error: error.message })
-//     }
-// })
+    redisClient.on('message', (channel, message) => {
+        if (channel === redisChannel) {
+            socket.emit('pollUpdate', JSON.parse(message))
+        }
+    })
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected')
+        redisClient.unsubscribe(redisChannel)
+    })
+})
+
+const PORT = process.env.PORT || 7777
 
 app.use('/', getAddress)
 app.use('/poll', poll)
