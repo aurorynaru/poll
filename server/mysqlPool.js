@@ -23,7 +23,7 @@ export const createPoll = async (
     single_vote
 ) => {
     try {
-        const code = randomCode()
+        const code = await randomCode()
         const [res] = await pool.query(
             'INSERT INTO poll (title,user_id,expiration,code,single_vote) VALUES (?,?,?,?,?)',
             [title, user_id, expiration, code, single_vote]
