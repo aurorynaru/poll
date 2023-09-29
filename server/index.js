@@ -8,12 +8,18 @@ import redisClient from './redisClient.js'
 //middleware
 
 // routes
+
+const corsOptions = {
+    origin: 'https://poll-roan.vercel.app/',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true // You can include this if you need to support cookies or authentication
+}
 import getAddress from './routes/api.js'
 import poll from './routes/poll.js'
 
 dotenv.config()
 const app = express()
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.json())
 
 const httpServer = createServer(app)
@@ -42,6 +48,6 @@ const PORT = process.env.PORT || 7777
 app.use('/', getAddress)
 app.use('/poll', poll)
 
-httpServer.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
