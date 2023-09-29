@@ -42,7 +42,15 @@ io.on('connection', (socket) => {
     })
 })
 
-const PORT = process.env.PORT || 7777
+const PORT = process.env.PORT
+app.get('/yo', (req, res) => {
+    try {
+        console.log('sat')
+        res.status(200).json({ message: 'success' })
+    } catch (error) {
+        res.status(409).json({ error: err.message })
+    }
+})
 
 app.use('/', getAddress)
 app.use('/poll', poll)

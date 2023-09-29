@@ -1,2 +1,2 @@
-const PORT = 7777
-export const ipAddress = `https://poll-backend-c83d.onrender.com:${PORT}`
+const PORT = 3000
+export const ipAddress = `https://localhost:${PORT}`
