@@ -18,7 +18,7 @@ import poll from './routes/poll.js'
 
 dotenv.config()
 const app = express()
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 
 const httpServer = createServer(app)
