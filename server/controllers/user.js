@@ -4,41 +4,54 @@ import requestIp from 'request-ip'
 import bcrypt from 'bcrypt'
 
 export const createUser = async (address) => {
-    const salt = await bcrypt.genSalt()
-    const hashAddress = await bcrypt.hash(address, salt)
+    try {
+        const salt = await bcrypt.genSalt()
+        const hashAddress = await bcrypt.hash(address, salt)
 
-    const [res] = await pool.query(
-        'INSERT INTO user (ip_address, hash_address) VALUES (?,?)',
-        [address, hashAddress]
-    )
+        const [res] = await pool.query(
+            'INSERT INTO user (ip_address, hash_address) VALUES (?,?)',
+            [address, hashAddress]
+        )
 
-    return res.insertId
+        return res.insertId
+    } catch (error) {
+        throw error
+    }
 }
 
 export const getUserAddress = async (address) => {
-    const [res] = await pool.query('SELECT * FROM user WHERE ip_address = ? ', [
-        address
-    ])
-
-    if (res[0] != undefined) {
-        return res[0].id
-    } else {
-        return undefined
+    try {
+        console.log(address)
+        const [res] = await pool.query(
+            'SELECT * FROM user WHERE ip_address = ? ',
+            [address]
+        )
+        if (res[0] != undefined) {
+            return res[0].id
+        } else {
+            return undefined
+        }
+    } catch (error) {
+        throw error
     }
 }
 
 export const getUserId = async (id, address) => {
-    const [res] = await pool.query('SELECT * FROM user WHERE id = ? ', [id])
+    try {
+        const [res] = await pool.query('SELECT * FROM user WHERE id = ? ', [id])
 
-    const isMatch = await bcrypt.compare(address, res[0].hash_address)
+        const isMatch = await bcrypt.compare(address, res[0].hash_address)
 
-    if (!isMatch) {
-        throw new Error('error not match')
+        if (!isMatch) {
+            throw new Error('error not match')
+        }
+
+        const token = jwt.sign({ id: res[0].id }, process.env.JWT_SECRET)
+
+        return { token: token, id: res[0].id }
+    } catch (error) {
+        res.status(409).json({ error: error.message })
     }
-
-    const token = jwt.sign({ id: res[0].id }, process.env.JWT_SECRET)
-
-    return { token: token, id: res[0].id }
 }
 
 export const user = async (req, res) => {
@@ -48,7 +61,7 @@ export const user = async (req, res) => {
         if (!address || address === '::1') {
             address = '127.0.0.1'
         }
-        console.log(address)
+
         const isMatch = await getUserAddress(address.toString())
 
         if (isMatch === undefined) {

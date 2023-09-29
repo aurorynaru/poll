@@ -1,9 +1,13 @@
 import { ipAddress } from '../address'
 export const getAddress = async () => {
-    const res = await fetch(`${ipAddress}/api/address`, {
-        method: 'POST'
-    })
-    const resAddress = await res.json()
+    try {
+        const res = await fetch(`${ipAddress}/api/address`, {
+            method: 'POST'
+        })
+        const resAddress = await res.json()
 
-    return resAddress
+        return resAddress
+    } catch (error) {
+        console.log(error)
+    }
 }

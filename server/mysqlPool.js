@@ -2,7 +2,7 @@ import mysql from 'mysql2'
 import dotenv from 'dotenv'
 import { randomCode } from './functions/random.js'
 dotenv.config()
-//poll_option_user_pivot
+
 const pool = mysql
     .createPool({
         host: process.env.MYSQL_HOST,
@@ -10,7 +10,7 @@ const pool = mysql
         password: process.env.MYSQL_PASS,
         database: process.env.MYSQL_DB,
         waitForConnections: true,
-        connectionLimit: 10,
+        connectionLimit: 20,
         queueLimit: 0
     })
     .promise()
@@ -22,40 +22,56 @@ export const createPoll = async (
     options,
     single_vote
 ) => {
-    const code = randomCode()
-    const [res] = await pool.query(
-        'INSERT INTO poll (title,user_id,expiration,code,single_vote) VALUES (?,?,?,?,?)',
-        [title, user_id, expiration, code, single_vote]
-    )
-
-    const pollId = res.insertId
-    createOptions(options, pollId)
-
-    return res.insertId
-}
-
-export const createOptions = async (options, pollId) => {
-    const dataIdArray = options.map(async (option) => {
-        const { answer } = option
-
+    try {
+        const code = randomCode()
         const [res] = await pool.query(
-            'INSERT INTO options (poll_option,options_id) VALUES (?,?)',
-            [answer, pollId]
+            'INSERT INTO poll (title,user_id,expiration,code,single_vote) VALUES (?,?,?,?,?)',
+            [title, user_id, expiration, code, single_vote]
         )
 
-        return res.insertId
-    })
+        const pollId = res.insertId
+        createOptions(options, pollId)
 
-    return dataIdArray
+        return res.insertId
+    } catch (error) {
+        throw error
+    }
+}
+
+pool.on('connection', (connection) => {
+    console.log('Connected to MySQL database')
+})
+
+export const createOptions = async (options, pollId) => {
+    try {
+        const dataIdArray = options.map(async (option) => {
+            const { answer } = option
+
+            const [res] = await pool.query(
+                'INSERT INTO options (poll_option,options_id) VALUES (?,?)',
+                [answer, pollId]
+            )
+
+            return res.insertId
+        })
+
+        return dataIdArray
+    } catch (error) {
+        throw error
+    }
 }
 
 export const getOptions = async (id) => {
-    const [res] = await pool.query(
-        `SELECT * FROM options WHERE options_id = ?`,
-        [id]
-    )
+    try {
+        const [res] = await pool.query(
+            `SELECT * FROM options WHERE options_id = ?`,
+            [id]
+        )
 
-    return res
+        return res
+    } catch (error) {
+        throw error
+    }
 }
 
 export const checkVoted = async (userId, pollId) => {
@@ -67,7 +83,7 @@ export const checkVoted = async (userId, pollId) => {
 
         return isVoted
     } catch (error) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -80,7 +96,7 @@ export const addVote = async (optionsId, data) => {
 
         return
     } catch (error) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -93,7 +109,7 @@ export const minusVote = async (optionsId, data) => {
 
         return
     } catch (error) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -106,7 +122,7 @@ export const updatePivot = async (newOptionsId, pivotId) => {
 
         return
     } catch (error) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -154,24 +170,37 @@ export const saveVote = async (userId, optionsId, pollId) => {
         }
         minusData = 0
 
-        await minusVote(oldVoteId, minusData)
+        try {
+        } catch (error) {
+            throw error
+        }
 
         await addVote(optionsId, addData)
 
         return
-    } catch (error) {}
+    } catch (error) {
+        throw error
+    }
 }
 
 export const viewPollCode = async (code) => {
-    const [res] = await pool.query(`SELECT * FROM poll WHERE code = ?`, [code])
-
-    return res[0]
+    try {
+        const [res] = await pool.query(`SELECT * FROM poll WHERE code = ?`, [
+            code
+        ])
+        return res[0]
+    } catch (error) {
+        throw error
+    }
 }
 
 export const viewPollId = async (id) => {
-    const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
-
-    return res[0]
+    try {
+        const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
+        return res[0]
+    } catch (error) {
+        throw error
+    }
 }
 
 export default pool

@@ -12,7 +12,7 @@ import { io } from '../index.js'
 export const postPoll = async (req, res) => {
     try {
         const { title, user_id, expiration, options, single_vote } = req.body
-
+        console.log(title, user_id, expiration, options, single_vote)
         const id = await createPoll(
             title,
             user_id,
