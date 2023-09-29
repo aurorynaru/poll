@@ -10,9 +10,8 @@ import redisClient from './redisClient.js'
 // routes
 
 const corsOptions = {
-    origin: 'https://poll-roan.vercel.app/',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true // You can include this if you need to support cookies or authentication
+    origin: 'https://poll-rvo7.vercel.app/',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }
 import getAddress from './routes/api.js'
 import poll from './routes/poll.js'
