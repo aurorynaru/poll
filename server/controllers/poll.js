@@ -13,7 +13,7 @@ import { io } from '../index.js'
 export const postPoll = async (req, res) => {
     try {
         const { title, user_id, expiration, options, single_vote } = req.body
-
+        console.log(title, user_id, expiration, options, single_vote)
         const id = await createPoll(
             title,
             user_id,
@@ -21,10 +21,10 @@ export const postPoll = async (req, res) => {
             options,
             single_vote
         )
-
+        console.log('id', id)
         const pollObj = await viewPollId(id)
         await getOptions(id)
-
+        console.log('pollObj', pollObj)
         res.status(201).json({
             code: pollObj.code,
             poll_id: pollObj.id,

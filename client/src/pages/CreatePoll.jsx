@@ -110,6 +110,7 @@ const CreatePoll = () => {
     }, [watch])
 
     const onSubmit = async (data) => {
+        setIsSendingData(true)
         setValue('answerAmount', answersArray.length)
         const time = getValues('time')
 
@@ -148,7 +149,7 @@ const CreatePoll = () => {
                 },
                 body: JSON.stringify(values)
             })
-            setIsSendingData(true)
+
             const resData = await res.json()
 
             if (resData.error) {
