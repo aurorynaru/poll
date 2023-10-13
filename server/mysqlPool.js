@@ -49,7 +49,7 @@ export const createPoll = async (
         )
 
         const pollId = res.insertId
-        createOptions(options, pollId)
+        await createOptions(options, pollId)
 
         return res.insertId
     } catch (error) {
