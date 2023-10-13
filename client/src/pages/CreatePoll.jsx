@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setToken, setId } from '../features/user/userSlice'
 import { getAddress } from '../middleware/midware'
 import { getTime } from '../features/getTime.js'
-import SwitchComponent from '../components/SwitchComponent.jsx'
+import { ProgressSpinner } from 'primereact/progressspinner'
 
 const CreatePoll = () => {
     const [answersArray, setAnswersArray] = useState([])
@@ -24,6 +24,7 @@ const CreatePoll = () => {
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
     const [checked, setChecked] = useState(true)
     const [dueTime, setDueTime] = useState(null)
+    const [isSendingData, setIsSendingData] = useState(false)
     const id = useSelector((state) => state.id)
     const token = useSelector((state) => state.token)
     const navigate = useNavigate()
@@ -129,7 +130,6 @@ const CreatePoll = () => {
         }
 
         if (answersLength && time) {
-            //  const { title, user_id, expiration, options } = req.body
             clearErrors('time')
             const values = {}
             values.title = data.title
@@ -148,8 +148,15 @@ const CreatePoll = () => {
                 },
                 body: JSON.stringify(values)
             })
+            setIsSendingData(true)
             const resData = await res.json()
-            console.log(resData)
+
+            if (resData.error) {
+                console.log(resData.error)
+            } else {
+                setIsSendingData(false)
+                navigate(`/poll/${resData.code}`)
+            }
         }
     }
 
@@ -171,7 +178,7 @@ const CreatePoll = () => {
     }
 
     return (
-        <div className='flex align-items-center justify-content-center w-full rounded '>
+        <div className='flex align-items-center justify-content-center w-full rounded'>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className='surface-card px-4 pb-4 shadow-2 border-round w-full lg:w-6'
@@ -205,10 +212,6 @@ const CreatePoll = () => {
                         <span className='text-lg px-3 py-2 font-medium'>
                             Input Poll Answers Below
                         </span>
-                        {/* <SwitchComponent
-                            checked={checked}
-                            setChecked={setChecked}
-                        /> */}
                     </div>
                 </Divider>
                 <div className='flex w-full justify-content-center align-items-center border gap-3'>
@@ -245,7 +248,26 @@ const CreatePoll = () => {
                     )}
                 </div>
                 <div className='w-full flex justify-content-center mt-5'>
-                    <Button label='Create Poll' className='w-5' raised />
+                    {isSendingData ? (
+                        <Button
+                            disabled={true}
+                            label='Creating Poll'
+                            className='flex w-5'
+                            raised
+                        >
+                            <ProgressSpinner
+                                style={{ width: '20px', height: '20px' }}
+                                strokeWidth='8'
+                            />
+                        </Button>
+                    ) : (
+                        <Button
+                            disabled={false}
+                            label='Create Poll'
+                            className='w-5'
+                            raised
+                        />
+                    )}
                 </div>
             </form>
         </div>

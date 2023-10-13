@@ -1,6 +1,7 @@
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
 import { randomCode } from './functions/random.js'
+
 dotenv.config()
 
 const pool = mysql
@@ -14,6 +15,24 @@ const pool = mysql
         queueLimit: 0
     })
     .promise()
+
+pool.on('connection', (connection) => {
+    console.log('Connected to MySQL database')
+})
+
+export const deactivatePollFn = async (expDate, id) => {
+    try {
+        const isExpired = await checkIfExpired(expDate, id)
+
+        if (isExpired === 1) {
+            return 1
+        } else {
+            return 0
+        }
+    } catch (error) {
+        throw error
+    }
+}
 
 export const createPoll = async (
     title,
@@ -37,10 +56,6 @@ export const createPoll = async (
         throw error
     }
 }
-
-pool.on('connection', (connection) => {
-    console.log('Connected to MySQL database')
-})
 
 export const createOptions = async (options, pollId) => {
     try {
@@ -164,17 +179,17 @@ export const saveVote = async (userId, optionsId, pollId) => {
             [oldVoteId]
         )
         const [optionMinus] = [optionsDataMinus][0]
-        let minusData
-        if (optionMinus.option_votes > 0) {
-            minusData = optionMinus.option_votes - 1
+        let minusData = optionMinus.option_votes - 1
+        if (optionMinus.option_votes === 0) {
+            minusData = 0
         }
-        minusData = 0
 
         try {
         } catch (error) {
             throw error
         }
 
+        await minusVote(oldVoteId, minusData)
         await addVote(optionsId, addData)
 
         return
@@ -198,6 +213,64 @@ export const viewPollId = async (id) => {
     try {
         const [res] = await pool.query(`SELECT * FROM poll WHERE id = ?`, [id])
         return res[0]
+    } catch (error) {
+        throw error
+    }
+}
+
+export const checkIfExpired = async (expDate, id) => {
+    try {
+        const isExpired = await pool.query(
+            `SELECT expired from poll where id = ?`,
+            [id]
+        )
+        if (isExpired === 1) {
+            return 1
+        }
+        const expirationDate = new Date(expDate)
+        const currentDate = new Date()
+
+        const expirationTimestamp = expirationDate.getTime()
+        const currentTimestamp = currentDate.getTime()
+
+        if (currentTimestamp > expirationTimestamp) {
+            await pool.query(` UPDATE poll SET expired = ? WHERE id = ? `, [
+                1,
+                id
+            ])
+            return 1
+        } else {
+            return 0
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+export const checkPollExpiredId = async (id) => {
+    try {
+        const [res] = await pool.query(`SELECT * FROM poll WHERE id =?`, [id])
+
+        const isExpired = await checkIfExpired(res[0].expiration, id)
+
+        if (isExpired === 1) {
+            return 1
+        } else {
+            return 0
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+export const checkPollExpired = async () => {
+    try {
+        const [res] = await pool.query(`SELECT * FROM poll`)
+
+        for (const data of res) {
+            await checkIfExpired(data.expiration, data.id)
+            console.log(`${data.id} is expired `)
+        }
     } catch (error) {
         throw error
     }

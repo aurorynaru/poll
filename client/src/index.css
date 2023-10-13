@@ -5,3 +5,12 @@ body,
 #root {
     font-family: '-apple-system', 'BlinkMacSystemFont', 'Rubik', sans-serif;
 }
+
+.navBar {
+    border: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navBar:hover {
+    transform: scale(1.1) rotate(-3deg);
+}

@@ -8,6 +8,7 @@ import redisClient from './redisClient.js'
 //middleware
 
 // routes
+export const activePolls = new Map()
 
 const corsOptions = {
     origin: 'https://poll-rvo7.vercel.app/',
@@ -15,6 +16,7 @@ const corsOptions = {
 }
 import getAddress from './routes/api.js'
 import poll from './routes/poll.js'
+import { deactivatePollFn } from './mysqlPool.js'
 
 dotenv.config()
 const app = express()
@@ -25,32 +27,26 @@ const httpServer = createServer(app)
 export const io = new Server(httpServer, { cors: { origin: '*' } })
 
 io.on('connection', (socket) => {
-    console.log('Client connected')
+    const pollUpdatesChannel = 'pollUpdates'
+    const viewPollChannel = 'viewPollUpdates'
+    const expire = 'expireChannel'
 
-    const redisChannel = 'pollUpdates'
-    redisClient.subscribe(redisChannel)
+    redisClient.subscribe(pollUpdatesChannel)
+    redisClient.subscribe(viewPollChannel)
 
     redisClient.on('message', (channel, message) => {
-        if (channel === redisChannel) {
+        if (channel === pollUpdatesChannel || channel === viewPollChannel) {
             socket.emit('pollUpdate', JSON.parse(message))
         }
     })
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected')
-        redisClient.unsubscribe(redisChannel)
+        redisClient.unsubscribe(pollUpdatesChannel)
+        redisClient.unsubscribe(viewPollChannel)
     })
 })
 
 const PORT = process.env.PORT
-app.get('/yo', (req, res) => {
-    try {
-        console.log('sat')
-        res.status(200).json({ message: 'success' })
-    } catch (error) {
-        res.status(409).json({ error: err.message })
-    }
-})
 
 app.use('/', getAddress)
 app.use('/poll', poll)
