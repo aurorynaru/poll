@@ -11,7 +11,7 @@ import redisClient from './redisClient.js'
 export const activePolls = new Map()
 
 const corsOptions = {
-    origin: 'https://poll-rvo7.vercel.app/',
+    origin: 'https://poll-client-14r6.onrender.com/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }
 import getAddress from './routes/api.js'
