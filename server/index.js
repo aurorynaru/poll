@@ -11,12 +11,11 @@ import redisClient from './redisClient.js'
 export const activePolls = new Map()
 
 const corsOptions = {
-    origin: 'https://poll-client-14r6.onrender.com/',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }
 import getAddress from './routes/api.js'
 import poll from './routes/poll.js'
-import { deactivatePollFn } from './mysqlPool.js'
 
 dotenv.config()
 const app = express()
