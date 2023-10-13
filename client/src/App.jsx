@@ -4,7 +4,7 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import CreatePoll from './pages/CreatePoll'
-import Navbar from './components/navBar'
+import Navbar from './components/NavBar'
 import Home from './pages/Home'
 import VotePage from './pages/VotePage'
 
