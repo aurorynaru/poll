@@ -38,13 +38,11 @@ const Home = () => {
         const checkUserId = async () => {
             console.log('heck')
             const checkUserRes = await checkUser(id)
-            console.log('yo', checkUserRes)
+
             if (!checkUserRes) {
-                console.log('not active purge')
                 dispatch(setPurge())
                 getAddressFn()
             } else {
-                console.log('continue')
                 return
             }
         }

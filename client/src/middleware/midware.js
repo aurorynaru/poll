@@ -6,7 +6,7 @@ export const getAddress = async () => {
             method: 'POST'
         })
         const resAddress = await res.json()
-        console.log(resAddress)
+
         return resAddress
     } catch (error) {
         console.log(error)
@@ -15,7 +15,6 @@ export const getAddress = async () => {
 
 export const checkUser = async (userId) => {
     try {
-        console.log(userId)
         const res = await fetch(`${ipAddress}/api/checkUser`, {
             method: 'POST',
             headers: {
@@ -24,7 +23,7 @@ export const checkUser = async (userId) => {
             body: JSON.stringify({ userId })
         })
         const resAddress = await res.json()
-        console.log('res', resAddress)
+
         if (!resAddress.message) {
             return { message: 'not active' }
         } else {
