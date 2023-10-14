@@ -16,6 +16,7 @@ const Home = () => {
     useEffect(() => {
         let isMounted = true
         dispatch(setPurge())
+
         const getAddressFn = async () => {
             if (isMounted && !token && !id) {
                 const addressRes = await getAddress()
