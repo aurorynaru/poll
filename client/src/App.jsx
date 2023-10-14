@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 
 function App() {
     const isAuth = Boolean(useSelector((state) => state.token))
-    const userId = useSelector((state) => state.user)
+    const userId = useSelector((state) => state.id)
     console.log(userId)
     return (
         <BrowserRouter>

@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { setToken, setId } from '../features/user/userSlice'
+import { setPurge, setToken, setId } from '../features/user/userSlice'
 import { getAddress } from '../middleware/midware'
 const Home = () => {
     const id = useSelector((state) => state.id)
@@ -15,7 +15,7 @@ const Home = () => {
 
     useEffect(() => {
         let isMounted = true
-
+        dispatch(setPurge())
         const getAddressFn = async () => {
             if (isMounted && !token && !id) {
                 const addressRes = await getAddress()
