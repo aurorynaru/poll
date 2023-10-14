@@ -15,8 +15,9 @@ const VotePage = () => {
     const [pollArr, setPollArr] = useState([])
     const [isVoted, setIsVoted] = useState(true)
     const [optionId, setOptionId] = useState(null)
-    const [isExpired, setIsExpired] = useState(null)
+    const [isExpired, setIsExpired] = useState(false)
     const [expirationTime, setExpirationTime] = useState(null)
+    const [countdown, setCountdown] = useState(null)
     const [timeRemaining, setTimeRemaining] = useState({
         Days: 31,
         Hours: 24,
@@ -107,18 +108,21 @@ const VotePage = () => {
         }
     }, [answerArr])
 
-    const countdown = useMemo(() => {
-        return (
-            <React.Fragment>
-                <CountdownTimer
-                    isExpired={isExpired}
-                    setIsExpired={setIsExpired}
-                    expirationDate={expirationTime}
-                    timeRemaining={timeRemaining}
-                    setTimeRemaining={setTimeRemaining}
-                />
-            </React.Fragment>
-        )
+    useEffect(() => {
+        const cdElement = () => {
+            return (
+                <React.Fragment>
+                    <CountdownTimer
+                        setIsExpired={setIsExpired}
+                        isExpired={isExpired}
+                        expirationDate={expirationTime}
+                        timeRemaining={timeRemaining}
+                        setTimeRemaining={setTimeRemaining}
+                    />
+                </React.Fragment>
+            )
+        }
+        setCountdown(cdElement())
     }, [expirationTime, timeRemaining])
 
     const answerElement = useMemo(() => {
@@ -126,7 +130,7 @@ const VotePage = () => {
             return (
                 <div key={answer.id} className='flex flex-column gap-2'>
                     <AnswerComponent
-                        disabled={isExpired ? true : false}
+                        disableButton={isExpired ? true : false}
                         setOptionId={setOptionId}
                         answerId={answer.id}
                         saveVoteDB={saveVoteDB}
@@ -144,7 +148,7 @@ const VotePage = () => {
 
     useEffect(() => {
         setAnsElement(answerElement)
-    }, [answerArr, totalVotes])
+    }, [answerArr, totalVotes, isExpired])
 
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>

@@ -73,6 +73,7 @@ const Home = () => {
                     </div>
                     <div className='flex align-items-center justify-content-evenly mb-2 '>
                         <Button
+                            disabled={token ? false : true}
                             onClick={() => {
                                 if (code && code.length == 6) {
                                     navigate(`/poll/${code}`)
@@ -86,6 +87,7 @@ const Home = () => {
                         />
                         <span className='text-2xl'> or </span>
                         <Button
+                            disabled={token ? false : true}
                             onClick={() => {
                                 navigate('/create')
                             }}

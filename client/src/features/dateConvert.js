@@ -16,11 +16,12 @@ export const dateConvert = (expDate) => {
 
     const date = new Date(expDate)
 
-    const month = months[date.getMonth()]
-    const day = date.getDate()
-    const year = date.getFullYear()
-    let hours = date.getHours()
-    const minutes = date.getMinutes()
+    const month = months[date.getUTCMonth()]
+    const day = date.getUTCDate()
+    const year = date.getUTCFullYear()
+    let hours = date.getUTCHours()
+    const minutes = date.getUTCMinutes()
+    const seconds = date.getUTCSeconds()
     const ampm = hours >= 12 ? 'PM' : 'AM'
 
     // Convert to 12-hour time format
@@ -28,6 +29,7 @@ export const dateConvert = (expDate) => {
         hours -= 12
     }
 
-    const formattedDate = `${month} ${day} ${year} ${hours}:${minutes} ${ampm}`
+    const formattedDate = `${month} ${day} ${year} ${hours}:${minutes}:${seconds} ${ampm}`
+
     return formattedDate
 }

@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo } from 'react'
 import { dateConvert } from '../features/dateConvert'
-
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(duration)
+dayjs.extend(utc)
 function CountdownTimer({
     expirationDate,
     setTimeRemaining,
@@ -9,35 +13,42 @@ function CountdownTimer({
     isExpired
 }) {
     function calculateTimeRemaining() {
-        const currentTime = new Date().getTime()
-        const expirationTime = new Date(expirationDate).getTime()
-        const timeDifference = expirationTime - currentTime
-
+        const currentTime = dayjs().utc(true)
+        const expirationTime = dayjs(expirationDate).utc()
+        const timeDifference = dayjs.duration(expirationTime.diff(currentTime))
         if (timeDifference <= 0) {
             return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         }
 
-        const Seconds = Math.floor((timeDifference / 1000) % 60)
-        const Minutes = Math.floor((timeDifference / (1000 * 60)) % 60)
-        const Hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24)
-        const Days = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
+        const days = timeDifference.days()
+        const hours = timeDifference.hours()
+        const minutes = timeDifference.minutes()
+        const seconds = timeDifference.seconds()
 
-        return { Days, Hours, Minutes, Seconds }
+        return { days, hours, minutes, seconds }
     }
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setTimeRemaining(calculateTimeRemaining())
-        }, 1000)
+        let intervalId
+
+        const updateRemainingTime = () => {
+            if (!isExpired) {
+                setTimeRemaining(calculateTimeRemaining())
+            } else {
+                clearInterval(intervalId)
+            }
+        }
+
+        intervalId = setInterval(updateRemainingTime, 1000)
 
         return () => {
-            clearInterval(interval)
+            clearInterval(intervalId)
         }
-    }, [expirationDate])
-
+    }, [expirationDate, isExpired])
     const counterElement = useMemo(() => {
         const time = timeRemaining
         const expDate = dateConvert(expirationDate)
+
         const timeArr = []
         for (const val in time) {
             const letter = val.charAt(0).toLocaleLowerCase()

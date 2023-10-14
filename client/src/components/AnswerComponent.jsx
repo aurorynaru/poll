@@ -13,7 +13,7 @@ const AnswerComponent = ({
     answerId,
     setOptionId,
     saveVoteDB,
-    disabled = false
+    disableButton = false
 }) => {
     let percentage = ((value / totalVotes) * 100).toFixed(0)
 
@@ -37,7 +37,7 @@ const AnswerComponent = ({
                 <>
                     <div className='flex flex-column mb-3'>
                         <Button
-                            disabled={disabled}
+                            disabled={disableButton}
                             className={`outline hover:bg-primary text-md  ${
                                 isSelected == answerId ? 'bg-primary' : ''
                             }`}
@@ -63,9 +63,8 @@ const AnswerComponent = ({
             )
         }
 
-        setAnsElem()
-        setElem(setAnsElem)
-    }, [index, isSelected, totalVotes, disabled])
+        setElem(setAnsElem())
+    }, [index, isSelected, totalVotes, disableButton])
     //edit
 
     return (
