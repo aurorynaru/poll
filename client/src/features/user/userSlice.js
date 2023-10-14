@@ -10,7 +10,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setId: (state, action) => {
-            state.id = action.payload.id
+            state.user = action.payload.id
         },
 
         setToken: (state, action) => {
@@ -18,7 +18,7 @@ export const userSlice = createSlice({
         },
         setPurge: (state, action) => {
             state.token = null
-            state.id = null
+            state.user = null
         }
     }
 })

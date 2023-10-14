@@ -54,6 +54,26 @@ export const getUserId = async (id, address) => {
     }
 }
 
+export const checkUser = async (req, res) => {
+    try {
+        let address = requestIp.getClientIp(req)
+
+        if (!address || address === '::1') {
+            address = '127.0.0.1'
+        }
+
+        const { userId } = req.body
+
+        const userObj = await getUserId(userId, address.toString())
+
+        if (!userObj.id) {
+            res.status(400).json({ message: false })
+        }
+    } catch (error) {
+        res.status(409).json({ error: error.message })
+    }
+}
+
 export const user = async (req, res) => {
     try {
         let address = requestIp.getClientIp(req)
@@ -67,10 +87,9 @@ export const user = async (req, res) => {
         if (isMatch === undefined) {
             const userId = await createUser(address.toString())
             const userObj = await getUserId(userId, address.toString())
-            console.log('usercreated')
+
             res.status(200).json(userObj)
         } else {
-            console.log('usercreated')
             const userObj = await getUserId(isMatch, address.toString())
             res.status(200).json(userObj)
         }

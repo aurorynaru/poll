@@ -11,7 +11,8 @@ import { useSelector } from 'react-redux'
 
 function App() {
     const isAuth = Boolean(useSelector((state) => state.token))
-
+    const userId = useSelector((state) => state.user)
+    console.log(userId)
     return (
         <BrowserRouter>
             <div className='min-h-screen transition-all transition-duration-200 layout-content surface-ground w-full flex align-items-center justify-content-center w-full px-4'>
