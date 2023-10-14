@@ -17,17 +17,6 @@ const Home = () => {
     useEffect(() => {
         let isMounted = true
 
-        const checkUserId = async () => {
-            const isActive = await checkUser()
-            if (!isActive) {
-                console.log('not active purge')
-                dispatch(setPurge())
-            } else {
-                setIsActive(true)
-                return
-            }
-        }
-
         const getAddressFn = async () => {
             if (isMounted && !token && !id) {
                 const addressRes = await getAddress()
@@ -43,6 +32,20 @@ const Home = () => {
                         id: addressRes.id
                     })
                 )
+            }
+        }
+
+        const checkUserId = async () => {
+            const isActive = await checkUser(id)
+            console.log('yo')
+            if (!isActive) {
+                console.log('not active purge')
+                dispatch(setPurge())
+                getAddressFn()
+            } else {
+                console.log('continue')
+                setIsActive(true)
+                return
             }
         }
 
