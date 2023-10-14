@@ -6,8 +6,10 @@ import { debounce } from '../features/debounce'
 import socketIOClient from 'socket.io-client'
 import CountdownTimer from '../components/CountdownTimer'
 import CopyToClipboard from '../components/CopyToClipboard'
+import { useSelector } from 'react-redux'
 
 const VotePage = () => {
+    const userId = useSelector((state) => state.id)
     const { code } = useParams()
     const [totalVotes, setTotalVotes] = useState(0)
     const [ansElement, setAnsElement] = useState(null)
@@ -29,7 +31,7 @@ const VotePage = () => {
 
     const saveVoteDB = debounce((answerId) => {
         saveVoteFn({
-            userId: pollArr.user_id,
+            userId: userId,
             optionsId: answerId,
             pollId: pollArr.id,
             code: pollArr.code
