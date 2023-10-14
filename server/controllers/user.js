@@ -85,17 +85,15 @@ export const user = async (req, res) => {
         const isMatch = await getUserAddress(address.toString())
         console.log(isMatch)
         if (isMatch === undefined) {
-            console.log('First if')
             const userId = await createUser(address.toString())
-            console.log('created user')
+
             const userObj = await getUserId(userId, address.toString())
-            console.log('got user id')
-            console.log('user:', userObj, 'created')
+
+            console.log('user:', userObj.id, 'created')
             res.status(200).json(userObj)
         } else {
-            console.log('else')
             const userObj = await getUserId(isMatch, address.toString())
-            console.log('user:', userObj, 'logged in')
+            console.log('user:', userObj.id, 'logged in')
             res.status(200).json(userObj)
         }
     } catch (error) {
