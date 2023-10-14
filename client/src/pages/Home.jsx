@@ -5,17 +5,28 @@ import { Checkbox } from 'primereact/checkbox'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPurge, setToken, setId } from '../features/user/userSlice'
-import { getAddress } from '../middleware/midware'
+import { checkUser, getAddress } from '../middleware/midware'
 const Home = () => {
     const id = useSelector((state) => state.id)
     const token = useSelector((state) => state.token)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [code, setCode] = useState('')
+    const [isActive, setIsActive] = useState(false)
 
     useEffect(() => {
         let isMounted = true
-        dispatch(setPurge())
+
+        const checkUserId = async () => {
+            const isActive = await checkUser()
+            if (!isActive) {
+                console.log('not active purge')
+                dispatch(setPurge())
+            } else {
+                setIsActive(true)
+                return
+            }
+        }
 
         const getAddressFn = async () => {
             if (isMounted && !token && !id) {
@@ -35,6 +46,10 @@ const Home = () => {
             }
         }
 
+        if (isMounted && token && id) {
+            checkUserId()
+        }
+
         if (isMounted && !token && !id) {
             getAddressFn()
         }
@@ -43,6 +58,14 @@ const Home = () => {
             isMounted = false
         }
     }, [])
+
+    useEffect(() => {
+        if (id) {
+            if (token) {
+                setIsActive(true)
+            }
+        }
+    }, [id, token])
 
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
@@ -74,7 +97,7 @@ const Home = () => {
                     </div>
                     <div className='flex align-items-center justify-content-evenly mb-2 '>
                         <Button
-                            disabled={token ? false : true}
+                            disabled={isActive ? false : true}
                             onClick={() => {
                                 if (code && code.length == 6) {
                                     navigate(`/poll/${code}`)
@@ -88,7 +111,7 @@ const Home = () => {
                         />
                         <span className='text-2xl'> or </span>
                         <Button
-                            disabled={token ? false : true}
+                            disabled={isActive ? false : true}
                             onClick={() => {
                                 navigate('/create')
                             }}

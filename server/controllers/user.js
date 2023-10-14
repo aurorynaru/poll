@@ -61,9 +61,9 @@ export const checkUser = async (req, res) => {
         if (!address || address === '::1') {
             address = '127.0.0.1'
         }
-
+        console.log(address)
         const { userId } = req.body
-
+        console.log(userId)
         const userObj = await getUserId(userId, address.toString())
 
         if (!userObj.id) {

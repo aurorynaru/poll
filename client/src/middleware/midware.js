@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux'
 import { ipAddress } from '../address'
 
 export const getAddress = async () => {
@@ -15,7 +14,6 @@ export const getAddress = async () => {
 }
 
 export const checkUser = async (userId) => {
-    const dispatch = useDispatch()
     try {
         const res = await fetch(`${ipAddress}/api/checkUser`, {
             method: 'POST',
@@ -25,11 +23,11 @@ export const checkUser = async (userId) => {
             body: JSON.stringify({ userId })
         })
         const resAddress = await res.json()
+        console.log(resAddress)
         if (!resAddress.message) {
-            console.log('deleted')
-            dispatch(setPurge())
+            return { message: 'not active' }
         } else {
-            return
+            return { message: 'active' }
         }
     } catch (error) {}
 }
