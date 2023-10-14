@@ -62,6 +62,7 @@ export const checkUser = async (req, res) => {
             address = '127.0.0.1'
         }
 
+        console.log('checkUser', address)
         const { userId } = req.body
         const userObj = await getUserId(userId, address.toString())
 
@@ -84,7 +85,7 @@ export const user = async (req, res) => {
         }
 
         const isMatch = await getUserAddress(address.toString())
-        console.log(isMatch)
+        console.log('user', address)
         if (isMatch === undefined) {
             const userId = await createUser(address.toString())
 
