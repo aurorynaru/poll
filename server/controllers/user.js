@@ -94,8 +94,8 @@ export const user = async (req, res) => {
             res.status(200).json(userObj)
         } else {
             console.log('else')
-            console.log('user:', userObj, 'logged in')
             const userObj = await getUserId(isMatch, address.toString())
+            console.log('user:', userObj, 'logged in')
             res.status(200).json(userObj)
         }
     } catch (error) {

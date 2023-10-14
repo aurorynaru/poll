@@ -7,7 +7,7 @@ export const getAddress = async () => {
             method: 'POST'
         })
         const resAddress = await res.json()
-
+        console.log(resAddress)
         return resAddress
     } catch (error) {
         console.log(error)
