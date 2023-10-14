@@ -36,7 +36,6 @@ const Home = () => {
         }
 
         const checkUserId = async () => {
-            console.log('heck')
             const checkUserRes = await checkUser(id)
 
             if (!checkUserRes) {
