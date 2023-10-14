@@ -43,7 +43,7 @@ export const votePoll = async (req, res) => {
 
         const poll = await viewPollCode(code)
         await saveVote(userId, optionsId, pollId)
-        const [isVote] = await checkVoted(poll.user_id, poll.id)
+        const [isVote] = await checkVoted(userId, poll.id)
 
         let selectedAnsId = 0
 
@@ -55,7 +55,7 @@ export const votePoll = async (req, res) => {
         }
         const options = await getOptions(poll.id)
 
-        console.log('user:', poll.user_id, 'poll:', poll.id)
+        console.log('user:', userId, 'poll:', poll.id)
         io.emit('pollUpdate', { poll, options, selectedAnsId, isExpired })
     } catch (error) {
         res.status(409).json({ error: error.message })
