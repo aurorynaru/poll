@@ -54,6 +54,7 @@ export const votePoll = async (req, res) => {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
+        console.log(options)
         console.log(
             'user:',
             poll.user_id,
