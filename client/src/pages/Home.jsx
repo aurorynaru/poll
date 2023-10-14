@@ -44,13 +44,14 @@ const Home = () => {
                 getAddressFn()
             } else {
                 console.log('continue')
-                setIsActive(true)
+                getAddressFn()
                 return
             }
         }
 
         if (isMounted && token && id) {
             checkUserId()
+            console.log('run')
         }
 
         if (isMounted && !token && !id) {
@@ -63,13 +64,13 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
-        if (id) {
+        if (id && !isActive) {
             if (token) {
                 setIsActive(true)
             }
         }
     }, [id, token])
-
+    console.log(isActive)
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>
