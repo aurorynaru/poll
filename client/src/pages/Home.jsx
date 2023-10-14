@@ -36,22 +36,21 @@ const Home = () => {
         }
 
         const checkUserId = async () => {
-            const isActive = await checkUser(id)
-            console.log('yo')
-            if (!isActive) {
+            console.log('heck')
+            const checkUserRes = await checkUser(id)
+            console.log('yo', checkUserRes)
+            if (!checkUserRes) {
                 console.log('not active purge')
                 dispatch(setPurge())
                 getAddressFn()
             } else {
                 console.log('continue')
-                getAddressFn()
                 return
             }
         }
 
         if (isMounted && token && id) {
             checkUserId()
-            console.log('run')
         }
 
         if (isMounted && !token && !id) {
@@ -70,7 +69,7 @@ const Home = () => {
             }
         }
     }, [id, token])
-    console.log(isActive)
+
     return (
         <div className='flex align-items-center justify-content-center w-full rounded'>
             <div className='surface-card p-4 shadow-2 border-round w-full lg:w-6'>

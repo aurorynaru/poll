@@ -63,11 +63,12 @@ export const checkUser = async (req, res) => {
         }
         console.log(address)
         const { userId } = req.body
-        console.log(userId)
         const userObj = await getUserId(userId, address.toString())
-
+        console.log(userObj)
         if (!userObj.id) {
             res.status(400).json({ message: false })
+        } else {
+            res.status(400).json({ message: true })
         }
     } catch (error) {
         res.status(409).json({ error: error.message })
