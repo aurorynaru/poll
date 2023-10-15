@@ -38,6 +38,7 @@ export const postPoll = async (req, res) => {
 export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
+        console.log(userId, optionsId, pollId, code)
         console.log('voter', userId)
         const isExpired = await checkPollExpiredId(pollId)
         console.log('checked if expired', isExpired)
