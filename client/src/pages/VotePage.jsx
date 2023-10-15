@@ -45,7 +45,7 @@ const VotePage = () => {
 
         setTotalVotes(totalAmount)
     }
-
+    // get voted id
     const getPollFn = async () => {
         const res = await fetch(`${ipAddress}/poll/${code}`)
         const resData = await res.json()

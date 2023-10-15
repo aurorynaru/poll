@@ -64,13 +64,13 @@ export const votePoll = async (req, res) => {
 //edit
 export const viewPoll = async (req, res) => {
     try {
-        const { code } = req.params
+        const { code, userId } = req.params
 
         const poll = await viewPollCode(code)
         const isExpired = await checkPollExpiredId(poll.id)
         const options = await getOptions(poll.id)
-        const [isVote] = await checkVoted(poll.user_id, poll.id)
-
+        const [isVote] = await checkVoted(userId, poll.id)
+        console.log(isVote)
         let selectedAnsId = 0
 
         if (isVote.length > 0) {
