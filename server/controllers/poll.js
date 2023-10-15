@@ -42,9 +42,11 @@ export const votePoll = async (req, res) => {
         const isExpired = await checkPollExpiredId(pollId)
 
         const poll = await viewPollCode(code)
+        console.log('poll 1st')
         await saveVote(userId, optionsId, pollId)
+        console.log('vote saved')
         const [isVote] = await checkVoted(userId, poll.id)
-
+        console.log('got if voted')
         let selectedAnsId = 0
 
         if (isVote.length > 0) {
@@ -54,7 +56,7 @@ export const votePoll = async (req, res) => {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
-
+        console.log('got iptiis')
         console.log('user:', userId, 'poll:', poll.id)
         io.emit('pollUpdate', { poll, options, selectedAnsId, isExpired })
     } catch (error) {
