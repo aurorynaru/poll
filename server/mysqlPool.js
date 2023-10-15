@@ -249,10 +249,11 @@ export const checkIfExpired = async (expDate, id) => {
 
 export const checkPollExpiredId = async (id) => {
     try {
+        console.log('yo')
         const [res] = await pool.query(`SELECT * FROM poll WHERE id =?`, [id])
-
+        console.log('res', res)
         const isExpired = await checkIfExpired(res[0].expiration, id)
-
+        console.log('expired', isExpired)
         if (isExpired === 1) {
             return 1
         } else {
