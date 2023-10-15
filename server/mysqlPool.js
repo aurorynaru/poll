@@ -203,6 +203,7 @@ export const viewPollCode = async (code) => {
         const [res] = await pool.query(`SELECT * FROM poll WHERE code = ?`, [
             code
         ])
+        console.log('first', res)
         return res[0]
     } catch (error) {
         throw error
@@ -249,11 +250,10 @@ export const checkIfExpired = async (expDate, id) => {
 
 export const checkPollExpiredId = async (id) => {
     try {
-        console.log('yo')
         const [res] = await pool.query(`SELECT * FROM poll WHERE id =?`, [id])
-        console.log('res', res)
+
         const isExpired = await checkIfExpired(res[0].expiration, id)
-        console.log('expired', isExpired)
+
         if (isExpired === 1) {
             return 1
         } else {
