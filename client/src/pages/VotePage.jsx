@@ -48,7 +48,7 @@ const VotePage = () => {
     // get voted id
     const getPollFn = async () => {
         const res = await fetch(`${ipAddress}/poll/${code}`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
