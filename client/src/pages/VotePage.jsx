@@ -68,6 +68,7 @@ const VotePage = () => {
 
     const saveVoteFn = async (data) => {
         try {
+            console.log(data)
             const res = await fetch(`${ipAddress}/poll/vote`, {
                 method: 'POST',
                 headers: {
@@ -77,7 +78,6 @@ const VotePage = () => {
             })
 
             if (res.status != 200) {
-                // Handle successful response
                 const errorResponse = await res.json()
                 console.error('Error:', errorResponse.error)
             }
