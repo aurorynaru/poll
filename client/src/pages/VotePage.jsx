@@ -47,7 +47,13 @@ const VotePage = () => {
     }
     // get voted id
     const getPollFn = async () => {
-        const res = await fetch(`${ipAddress}/poll/${code}`)
+        const res = await fetch(`${ipAddress}/poll/${code}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId })
+        })
         const resData = await res.json()
         if (resData) {
             setIsVoted(resData.selectedAnsId)
