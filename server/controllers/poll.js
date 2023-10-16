@@ -41,16 +41,12 @@ export const votePoll = async (req, res) => {
         const isExpired = await checkPollExpiredId(pollId)
         const poll = await viewPollCode(code)
         await saveVote(userId, optionsId, pollId)
-        const [isVote] = await checkVoted(userId, poll.id)
-        let selectedAnsId = 0
-        if (isVote.length > 0) {
-            selectedAnsId = isVote[0].options_id
-        }
+
         if (!poll) {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
-        io.emit('pollUpdate', { poll, options, selectedAnsId, isExpired })
+        io.emit('pollUpdate', { poll, options, isExpired })
 
         res.status(200).json({ message: 'vote saved' })
     } catch (error) {
@@ -76,7 +72,7 @@ export const viewPoll = async (req, res) => {
         if (!poll) {
             throw new Error('No poll found')
         }
-
+        console.log(selectedAnsId)
         res.status(200).json({ poll, options, selectedAnsId, isExpired })
     } catch (error) {
         res.status(409).json({ error: error.message })
