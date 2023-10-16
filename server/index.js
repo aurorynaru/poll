@@ -28,7 +28,6 @@ export const io = new Server(httpServer, { cors: { origin: '*' } })
 io.on('connection', (socket) => {
     const pollUpdatesChannel = 'pollUpdates'
     const viewPollChannel = 'viewPollUpdates'
-    const expire = 'expireChannel'
 
     redisClient.subscribe(pollUpdatesChannel)
     redisClient.subscribe(viewPollChannel)

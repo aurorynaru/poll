@@ -4,7 +4,7 @@ import { viewPoll } from '../controllers/poll.js'
 const router = express.Router()
 
 router.post('/create', postPoll)
-router.post('/:code', viewPoll)
 router.post('/vote', votePoll)
+router.post('/:code', viewPoll)
 
 export default router

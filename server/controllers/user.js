@@ -62,7 +62,6 @@ export const checkUser = async (req, res) => {
             address = '127.0.0.1'
         }
 
-        console.log('checkUser', address)
         const { userId } = req.body
         const userObj = await getUserId(userId, address.toString())
 

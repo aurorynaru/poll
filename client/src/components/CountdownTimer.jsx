@@ -5,20 +5,16 @@ import duration from 'dayjs/plugin/duration'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(duration)
 dayjs.extend(utc)
-function CountdownTimer({
-    expirationDate,
-    setTimeRemaining,
-    timeRemaining,
-    setIsExpired,
-    isExpired
-}) {
+function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     function calculateTimeRemaining() {
         const currentTime = dayjs().utc(true)
-        const expirationTime = dayjs(expirationDate).utc()
-        const timeDifference = dayjs.duration(expirationTime.diff(currentTime))
-        if (timeDifference <= 0) {
+        const expirationTime = dayjs(expirationDate).utc(true)
+
+        if (currentTime.isAfter(expirationTime)) {
             return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         }
+
+        const timeDifference = dayjs.duration(expirationTime.diff(currentTime))
 
         const days = timeDifference.days()
         const hours = timeDifference.hours()
@@ -32,10 +28,15 @@ function CountdownTimer({
         let intervalId
 
         const updateRemainingTime = () => {
-            if (!isExpired) {
-                setTimeRemaining(calculateTimeRemaining())
-            } else {
+            if (
+                timeRemaining.days === 0 &&
+                timeRemaining.hours === 0 &&
+                timeRemaining.minutes === 0 &&
+                timeRemaining.seconds === 0
+            ) {
                 clearInterval(intervalId)
+            } else {
+                setTimeRemaining(calculateTimeRemaining())
             }
         }
 
@@ -44,7 +45,7 @@ function CountdownTimer({
         return () => {
             clearInterval(intervalId)
         }
-    }, [expirationDate, isExpired])
+    }, [expirationDate, timeRemaining])
     const counterElement = useMemo(() => {
         const time = timeRemaining
         const expDate = dateConvert(expirationDate)
@@ -52,6 +53,7 @@ function CountdownTimer({
         const timeArr = []
         for (const val in time) {
             const letter = val.charAt(0).toLocaleLowerCase()
+
             if (time[val] > 0 && val != 'Seconds') {
                 timeArr.push({ [letter]: time[val] })
             }
@@ -63,9 +65,6 @@ function CountdownTimer({
             }
         }
         if (timeArr.length < 1) {
-            if (!isExpired) {
-                setIsExpired(true)
-            }
             return (
                 <h3 className='p-0 m-0 text-primary'>
                     Deactivated on:{' '}

@@ -34,22 +34,15 @@ export const postPoll = async (req, res) => {
         res.status(409).json({ error: error.message })
     }
 }
-//test save res
+
 export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
-        console.log(userId, optionsId, pollId, code)
-        console.log('voter', userId)
         const isExpired = await checkPollExpiredId(pollId)
-        console.log('checked if expired', isExpired)
         const poll = await viewPollCode(code)
-        console.log('poll 1st')
         await saveVote(userId, optionsId, pollId)
-        console.log('vote saved')
         const [isVote] = await checkVoted(userId, poll.id)
-        console.log('got if voted')
         let selectedAnsId = 0
-
         if (isVote.length > 0) {
             selectedAnsId = isVote[0].options_id
         }
@@ -57,9 +50,9 @@ export const votePoll = async (req, res) => {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
-        console.log('got iptiis')
-        console.log('user:', userId, 'poll:', poll.id)
         io.emit('pollUpdate', { poll, options, selectedAnsId, isExpired })
+
+        res.status(200).json({ message: 'vote saved' })
     } catch (error) {
         res.status(409).json({ error: error.message })
     }
@@ -69,11 +62,12 @@ export const viewPoll = async (req, res) => {
     try {
         const { code } = req.params
         const { userId } = req.body
+
         const poll = await viewPollCode(code)
         const isExpired = await checkPollExpiredId(poll.id)
         const options = await getOptions(poll.id)
         const [isVote] = await checkVoted(userId, poll.id)
-        console.log(isVote)
+
         let selectedAnsId = 0
 
         if (isVote.length > 0) {

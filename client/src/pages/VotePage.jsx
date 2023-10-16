@@ -21,10 +21,10 @@ const VotePage = () => {
     const [expirationTime, setExpirationTime] = useState(null)
     const [countdown, setCountdown] = useState(null)
     const [timeRemaining, setTimeRemaining] = useState({
-        Days: 31,
-        Hours: 24,
-        Minutes: 60,
-        Seconds: 60
+        days: 31,
+        hours: 24,
+        minutes: 60,
+        seconds: 60
     })
 
     const [isSelected, setIsSelected] = useState(null)
@@ -45,7 +45,7 @@ const VotePage = () => {
 
         setTotalVotes(totalAmount)
     }
-    // get voted id
+
     const getPollFn = async () => {
         const res = await fetch(`${ipAddress}/poll/${code}`, {
             method: 'POST',
@@ -77,8 +77,9 @@ const VotePage = () => {
                 body: JSON.stringify(data)
             })
 
+            const errorResponse = await res.json()
+            console.log(errorResponse)
             if (res.status != 200) {
-                const errorResponse = await res.json()
                 console.error('Error:', errorResponse.error)
             }
         } catch (error) {
@@ -117,12 +118,21 @@ const VotePage = () => {
     }, [answerArr])
 
     useEffect(() => {
+        if (
+            timeRemaining.days === 0 &&
+            timeRemaining.hours === 0 &&
+            timeRemaining.minutes === 0 &&
+            timeRemaining.seconds === 0
+        ) {
+            setIsExpired(true)
+        }
+    }, [timeRemaining])
+
+    useEffect(() => {
         const cdElement = () => {
             return (
                 <React.Fragment>
                     <CountdownTimer
-                        setIsExpired={setIsExpired}
-                        isExpired={isExpired}
                         expirationDate={expirationTime}
                         timeRemaining={timeRemaining}
                         setTimeRemaining={setTimeRemaining}

@@ -203,7 +203,8 @@ export const viewPollCode = async (code) => {
         const [res] = await pool.query(`SELECT * FROM poll WHERE code = ?`, [
             code
         ])
-        console.log('first', res)
+        console.log(res)
+
         return res[0]
     } catch (error) {
         throw error
