@@ -28,16 +28,18 @@ export const io = new Server(httpServer, { cors: { origin: '*' } })
 io.on('connection', (socket) => {
     const pollUpdatesChannel = 'pollUpdates'
 
-    redisClient.subscribe(pollUpdatesChannel)
-
-    redisClient.on('message', (channel, message) => {
+    const messageListener = (channel, message) => {
         if (channel === pollUpdatesChannel) {
             socket.emit('pollUpdate', JSON.parse(message))
         }
-    })
+    }
+
+    redisClient.subscribe(pollUpdatesChannel)
+    redisClient.on('message', messageListener)
 
     socket.on('disconnect', () => {
         redisClient.unsubscribe(pollUpdatesChannel)
+        redisClient.removeListener('message', messageListener)
     })
 })
 
