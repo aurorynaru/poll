@@ -17,7 +17,7 @@ const AnswerComponent = ({
 }) => {
     const [elem, setElem] = useState()
     const [percentageData, setPercentageData] = useState(0)
-
+    console.log('first', percentageData)
     const valueTemplate = (value) => {
         return (
             <React.Fragment>
@@ -26,20 +26,20 @@ const AnswerComponent = ({
         )
     }
 
+    const setPercentage = () => {
+        let percentage = ((value / totalVotes) * 100).toFixed(0)
+
+        if (isNaN(percentage) || totalVotes === 0) {
+            percentage = 0
+        } else {
+            percentage = parseInt(percentage)
+        }
+        console.log('set', percentage)
+        return percentage
+    }
+
     useEffect(() => {
-        setPercentageData((prev) => {
-            let percentage = ((value / totalVotes) * 100).toFixed(0)
-
-            if (isNaN(percentage) || totalVotes === 0) {
-                percentage = 0
-            } else {
-                percentage = parseInt(percentage)
-            }
-            console.log('set', percentage)
-            return percentage
-        })
-
-        setPercentageData()
+        setPercentageData(setPercentage())
     }, [value, totalVotes])
 
     useEffect(() => {
@@ -77,7 +77,7 @@ const AnswerComponent = ({
         setElem(setAnsElem())
     }, [index, isSelected, totalVotes, disableButton, percentageData])
     //edit
-    console.log(percentageData)
+
     return (
         <div className='card flex-column justify-content-center gap-2'>
             {elem}
