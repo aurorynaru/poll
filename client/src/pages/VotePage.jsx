@@ -20,6 +20,8 @@ const VotePage = () => {
     const [isExpired, setIsExpired] = useState(false)
     const [expirationTime, setExpirationTime] = useState(null)
     const [countdown, setCountdown] = useState(null)
+
+    const [updated, setUpdated] = useState(0)
     const [timeRemaining, setTimeRemaining] = useState({
         days: 31,
         hours: 24,
@@ -94,6 +96,11 @@ const VotePage = () => {
             setIsVoted(updatedPollData.selectedAnsId)
             setAnswerArr(updatedPollData.options)
             setPollArr(updatedPollData.poll)
+            setUpdated((prev) => {
+                const updatedNum = prev + 1
+                console.log(updatedNum)
+                return updatedNum
+            })
         })
 
         return () => {
