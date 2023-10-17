@@ -15,12 +15,15 @@ export const getAddress = async () => {
 
 export const checkUser = async (userId) => {
     try {
+        const data = {
+            userId: userId
+        }
         const res = await fetch(`${ipAddress}/api/checkUser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ userId })
+            body: JSON.stringify(data)
         })
         const resAddress = await res.json()
 
