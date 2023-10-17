@@ -76,7 +76,7 @@ const AnswerComponent = ({
         setElem(setAnsElem())
     }, [index, isSelected, totalVotes, disableButton, percentage])
     //edit
-
+    console.log(percentage)
     return (
         <div className='card flex-column justify-content-center gap-2'>
             {elem}
