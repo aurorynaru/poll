@@ -16,7 +16,7 @@ const AnswerComponent = ({
     disableButton = false
 }) => {
     const [elem, setElem] = useState()
-    const [percentage, setPercentage] = useState(0)
+    const [percentageData, setPercentageData] = useState(0)
 
     const valueTemplate = (value) => {
         return (
@@ -27,7 +27,7 @@ const AnswerComponent = ({
     }
 
     useEffect(() => {
-        setPercentage((prev) => {
+        setPercentageData((prev) => {
             let percentage = ((value / totalVotes) * 100).toFixed(0)
 
             if (isNaN(percentage) || totalVotes === 0) {
@@ -35,10 +35,11 @@ const AnswerComponent = ({
             } else {
                 percentage = parseInt(percentage)
             }
+            console.log('set', percentage)
             return percentage
         })
 
-        setPercentage()
+        setPercentageData()
     }, [value, totalVotes])
 
     useEffect(() => {
@@ -65,7 +66,7 @@ const AnswerComponent = ({
                     </div>
                     <div className='flex  flex-column mb-3'>
                         <ProgressBar
-                            value={percentage}
+                            value={percentageData}
                             displayValueTemplate={valueTemplate}
                         ></ProgressBar>
                     </div>
@@ -74,9 +75,9 @@ const AnswerComponent = ({
         }
 
         setElem(setAnsElem())
-    }, [index, isSelected, totalVotes, disableButton, percentage])
+    }, [index, isSelected, totalVotes, disableButton, percentageData])
     //edit
-    console.log(percentage)
+    console.log(percentageData)
     return (
         <div className='card flex-column justify-content-center gap-2'>
             {elem}
