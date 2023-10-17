@@ -15,14 +15,9 @@ const AnswerComponent = ({
     saveVoteDB,
     disableButton = false
 }) => {
-    let percentage = ((value / totalVotes) * 100).toFixed(0)
-
-    if (isNaN(percentage) || totalVotes === 0) {
-        percentage = 0
-    } else {
-        percentage = parseInt(percentage)
-    }
     const [elem, setElem] = useState()
+    const [percentage, setPercentage] = useState(0)
+
     const valueTemplate = (value) => {
         return (
             <React.Fragment>
@@ -30,6 +25,21 @@ const AnswerComponent = ({
             </React.Fragment>
         )
     }
+
+    useEffect(() => {
+        setPercentage((prev) => {
+            let percentage = ((value / totalVotes) * 100).toFixed(0)
+
+            if (isNaN(percentage) || totalVotes === 0) {
+                percentage = 0
+            } else {
+                percentage = parseInt(percentage)
+            }
+            return percentage
+        })
+
+        setPercentage()
+    }, [value, totalVotes])
 
     useEffect(() => {
         const setAnsElem = () => {
@@ -64,7 +74,7 @@ const AnswerComponent = ({
         }
 
         setElem(setAnsElem())
-    }, [index, isSelected, totalVotes, disableButton])
+    }, [index, isSelected, totalVotes, disableButton, percentage])
     //edit
 
     return (
