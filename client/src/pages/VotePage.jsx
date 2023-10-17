@@ -173,7 +173,7 @@ const VotePage = () => {
 
     useEffect(() => {
         setAnsElement(answerElement)
-    }, [answerArr, totalVotes, isExpired])
+    }, [answerArr, totalVotes, isExpired, isVoted, pollArr])
 
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>

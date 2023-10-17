@@ -46,6 +46,7 @@ export const votePoll = async (req, res) => {
             throw new Error('No poll found')
         }
         const options = await getOptions(poll.id)
+        console.log(`userId:${userId} voted`)
         io.emit('pollUpdate', { poll, options, isExpired })
 
         res.status(200).json({ message: 'vote saved' })
