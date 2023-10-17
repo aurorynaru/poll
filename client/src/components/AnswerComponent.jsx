@@ -58,9 +58,13 @@ const AnswerComponent = ({
                             tooltip={`click to vote ${answer}`}
                             tooltipOptions={{ position: 'top' }}
                             onClick={() => {
-                                setIsSelected(answerId)
-                                saveVoteDB(answerId)
-                                setOptionId(answerId)
+                                if (isSelected != answerId) {
+                                    setIsSelected(answerId)
+                                    saveVoteDB(answerId)
+                                    setOptionId(answerId)
+                                } else {
+                                    console.log('dupe')
+                                }
                             }}
                         />
                     </div>
