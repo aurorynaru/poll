@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(duration)
 dayjs.extend(utc)
 function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
-    function calculateTimeRemaining() {
+    const calculateTimeRemaining = async () => {
         const currentTime = dayjs().utc(true)
         const expirationTime = dayjs(expirationDate).utc(true)
 
@@ -27,7 +27,7 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     useEffect(() => {
         let intervalId
 
-        const updateRemainingTime = () => {
+        const updateRemainingTime = async () => {
             if (
                 timeRemaining.days === 0 &&
                 timeRemaining.hours === 0 &&
@@ -36,7 +36,7 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
             ) {
                 clearInterval(intervalId)
             } else {
-                setTimeRemaining(calculateTimeRemaining())
+                setTimeRemaining(await calculateTimeRemaining())
             }
         }
 
