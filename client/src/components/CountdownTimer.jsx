@@ -7,8 +7,8 @@ dayjs.extend(duration)
 dayjs.extend(utc)
 function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     const calculateTimeRemaining = () => {
-        const currentTime = dayjs().utc(true)
-        const expirationTime = dayjs(expirationDate).utc(true)
+        const currentTime = dayjs().utc()
+        const expirationTime = dayjs(expirationDate).utc()
 
         console.log('currentTime', currentTime)
         console.log('expirationTime', expirationTime)
