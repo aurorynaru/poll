@@ -86,7 +86,7 @@ const CreatePoll = () => {
             const time = getValues('time')
             const timeStamp = getValues('stamp')
             const dateTimeRes = getTime(currentDate, timeStamp.name, time)
-
+            console.log(dateTimeRes)
             setDueTimeDisplay(dateTimeRes.dueTimeDisplay)
             setDueTime(dateTimeRes.dueTime)
         }, 1000)

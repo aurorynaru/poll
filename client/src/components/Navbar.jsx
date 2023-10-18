@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Divider } from 'primereact/divider'
+
 const Navbar = () => {
     const navigate = useNavigate()
     const handleNavigation = () => {

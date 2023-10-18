@@ -181,7 +181,7 @@ const VotePage = () => {
     useEffect(() => {
         setAnsElement(answerElement)
     }, [answerArr, totalVotes, isExpired, isVoted, pollArr])
-
+    console.log(expirationTime)
     return (
         <div className='flex flex-column align-items-center justify-content-center w-full rounded'>
             <div className='flex flex-column justify-content-center align-items-center gap-4'>
