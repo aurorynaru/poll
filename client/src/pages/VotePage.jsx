@@ -152,9 +152,8 @@ const VotePage = () => {
                 </React.Fragment>
             )
         }
-        if (expirationTime && timeRemaining) {
-            setCountdown(cdElement())
-        }
+
+        setCountdown(cdElement())
     }, [expirationTime, timeRemaining])
 
     const answerElement = useMemo(() => {
