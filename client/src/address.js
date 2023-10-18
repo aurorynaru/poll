@@ -3,4 +3,4 @@
 const apiUrlHost = import.meta.env.VITE_IP_HOST
 const apiUrlLocal = import.meta.env.VITE_IP_LOCAL
 const apiPort = import.meta.env.VITE_PORT
-export const ipAddress = apiUrlLocal + apiPort
+export const ipAddress = apiUrlHost
