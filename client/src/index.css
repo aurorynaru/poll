@@ -14,3 +14,21 @@ body,
 .navBar:hover {
     transform: scale(1.1) rotate(-3deg);
 }
+
+.text {
+    font-size: 12px;
+}
+
+.button-text {
+    font-size: 12px;
+}
+
+@media (min-width: 768px) {
+    .button-text {
+        font-size: 18px;
+    }
+
+    .text {
+        font-size: 18px;
+    }
+}

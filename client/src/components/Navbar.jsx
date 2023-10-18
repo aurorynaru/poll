@@ -8,7 +8,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className='fixed top-0 left-0 right-0 z-1 bg-auto px-5 '>
+        <nav className='fixed top-0 left-0 right-0 z-1 bg-auto px-5 shadow-5 bg-primary'>
             <h1
                 style={{ display: 'inline-block' }}
                 className='text-primary font-medium cursor-pointer border border-1 rounded border-round-lg p-1 bg-white navBar'
@@ -22,7 +22,6 @@ const Navbar = () => {
                     ></i>
                 </span>
             </h1>
-            <Divider />
         </nav>
     )
 }

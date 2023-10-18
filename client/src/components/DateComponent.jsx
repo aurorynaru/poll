@@ -24,7 +24,7 @@ const DateComponent = ({
     return (
         <div className='flex flex-column gap-2'>
             <label className={` font-medium`}>Expiration</label>
-            <div className='card flex flex-wrap gap-3 p-fluid w-7'>
+            <div className='card flex flex-wrap p-fluid w-full align-items-center'>
                 <div className='p-inputgroup flex-1'>
                     <FormInputNum
                         setTimeAmount={setTimeAmount}
@@ -41,7 +41,7 @@ const DateComponent = ({
                         options={time}
                         optionLabel='name'
                         placeholder='Select one'
-                        className='max-w-10rem'
+                        className='max-w-10rem text w-fit'
                     />
                 </div>
             </div>

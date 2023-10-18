@@ -39,6 +39,9 @@ export const votePoll = async (req, res) => {
     try {
         const { userId, optionsId, pollId, code } = req.body
         const isExpired = await checkPollExpiredId(pollId)
+        if (isExpired === 1) {
+            return
+        }
         const poll = await viewPollCode(code)
         await saveVote(userId, optionsId, pollId)
 

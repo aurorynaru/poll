@@ -16,6 +16,7 @@ const corsOptions = {
 }
 import getAddress from './routes/api.js'
 import poll from './routes/poll.js'
+import { deactivatePollFn } from './functions/setDeactivatePolls.js'
 
 dotenv.config()
 const app = express()
@@ -43,8 +44,16 @@ io.on('connection', (socket) => {
     })
 })
 
-const PORT = process.env.PORT
+const timer = setInterval(() => {
+    console.log('checking for expired polls....')
+    const res = deactivatePollFn()
+    if (res === 1) {
+        clearInterval(timer)
+        console.log('Done checking for expired polls')
+    }
+}, 300000)
 
+const PORT = process.env.PORT
 app.use('/', getAddress)
 app.use('/poll', poll)
 

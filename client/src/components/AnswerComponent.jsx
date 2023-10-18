@@ -17,7 +17,7 @@ const AnswerComponent = ({
 }) => {
     const [elem, setElem] = useState()
     const [percentageData, setPercentageData] = useState(0)
-    console.log('first', percentageData)
+
     const valueTemplate = (value) => {
         return (
             <React.Fragment>
@@ -34,7 +34,7 @@ const AnswerComponent = ({
         } else {
             percentage = parseInt(percentage)
         }
-        console.log('set', percentage)
+
         return percentage
     }
 
@@ -63,7 +63,6 @@ const AnswerComponent = ({
                                     saveVoteDB(answerId)
                                     setOptionId(answerId)
                                 } else {
-                                    console.log('dupe')
                                 }
                             }}
                         />

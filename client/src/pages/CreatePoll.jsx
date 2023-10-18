@@ -24,6 +24,7 @@ const CreatePoll = () => {
     const [selectedTime, setSelectedTime] = useState({ name: 'Hours' })
     const [checked, setChecked] = useState(true)
     const [dueTime, setDueTime] = useState(null)
+    const [dueTimeDisplay, setDueTimeDisplay] = useState(null)
     const [isSendingData, setIsSendingData] = useState(false)
     const id = useSelector((state) => state.id)
     const token = useSelector((state) => state.token)
@@ -86,7 +87,8 @@ const CreatePoll = () => {
             const timeStamp = getValues('stamp')
             const dateTimeRes = getTime(currentDate, timeStamp.name, time)
 
-            setDueTime(dateTimeRes)
+            setDueTimeDisplay(dateTimeRes.dueTimeDisplay)
+            setDueTime(dateTimeRes.dueTime)
         }, 1000)
 
         return () => {
@@ -192,22 +194,27 @@ const CreatePoll = () => {
                     inputId='title'
                     error={errors.title?.message}
                 />
-
-                <DateComponent
-                    setTimeAmount={setTimeAmount}
-                    timeAmount={timeAmount}
-                    setValue={setValue}
-                    register={register}
-                    error={errors.time?.message}
-                    inputId='time'
-                    value='time'
-                    selectedTime={selectedTime}
-                    setSelectedTime={setSelectedTime}
-                />
-                <div className='mt-2'>
-                    {dueTime && <Message severity='warn' text={`${dueTime}`} />}
+                <div className='flex w-full align-items-center justify-content-around'>
+                    <DateComponent
+                        setTimeAmount={setTimeAmount}
+                        timeAmount={timeAmount}
+                        setValue={setValue}
+                        register={register}
+                        error={errors.time?.message}
+                        inputId='time'
+                        value='time'
+                        selectedTime={selectedTime}
+                        setSelectedTime={setSelectedTime}
+                    />
+                    <div className='mt-2'>
+                        {dueTimeDisplay && (
+                            <Message
+                                severity='warn'
+                                text={`${dueTimeDisplay}`}
+                            />
+                        )}
+                    </div>
                 </div>
-
                 <Divider align='center'>
                     <div className='flex align-items-center justify-content-center'>
                         <span className='text-lg px-3 py-2 font-medium'>

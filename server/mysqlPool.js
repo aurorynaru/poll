@@ -221,12 +221,12 @@ export const viewPollId = async (id) => {
 
 export const checkIfExpired = async (expDate, id) => {
     try {
-        const isExpired = await pool.query(
+        const [isExpired] = await pool.query(
             `SELECT expired from poll where id = ?`,
             [id]
         )
-        if (isExpired === 1) {
-            return 1
+        if (isExpired[0].expired === 1) {
+            return 'already expired'
         }
         const expirationDate = new Date(expDate)
         const currentDate = new Date()
@@ -254,7 +254,7 @@ export const checkPollExpiredId = async (id) => {
 
         const isExpired = await checkIfExpired(res[0].expiration, id)
 
-        if (isExpired === 1) {
+        if (isExpired === 1 || isExpired === 'already expired') {
             return 1
         } else {
             return 0
@@ -266,12 +266,19 @@ export const checkPollExpiredId = async (id) => {
 
 export const checkPollExpired = async () => {
     try {
+        let count = 0
         const [res] = await pool.query(`SELECT * FROM poll`)
 
         for (const data of res) {
-            await checkIfExpired(data.expiration, data.id)
-            console.log(`${data.id} is expired `)
+            const res = await checkIfExpired(data.expiration, data.id)
+
+            if (res === 1) {
+                console.log(`${data.id} is deactivated `)
+                count++
+            }
         }
+
+        return { deactivatedCount: count, message: 'success' }
     } catch (error) {
         throw error
     }

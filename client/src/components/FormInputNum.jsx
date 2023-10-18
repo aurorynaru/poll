@@ -14,7 +14,7 @@ const FormInputNum = ({
     const setTimerFN = (e) => {
         let value = e.target.value
         if (value < 1) value = 1
-        console.log(value)
+
         setTimeAmount(value)
     }
 

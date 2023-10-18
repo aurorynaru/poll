@@ -105,9 +105,9 @@ const Home = () => {
                                     console.log('invalid code')
                                 }
                             }}
-                            label='Join poll'
+                            label='Join poll '
                             icon='pi pi-search'
-                            className='w-3'
+                            className='w-3 button-text w-fit'
                         />
                         <span className='text-2xl'> or </span>
                         <Button
@@ -117,7 +117,7 @@ const Home = () => {
                             }}
                             label='Create poll'
                             icon='pi pi-caret-up'
-                            className='w-3 bg-danger'
+                            className='w-3 bg-danger button-text w-fit'
                         />
                     </div>
                 </div>

@@ -1,3 +1,5 @@
+import { dateConvert } from './dateConvert'
+
 export const getTime = (currentDate, timeStamp, time) => {
     switch (timeStamp) {
         case 'Hours':
@@ -25,6 +27,8 @@ export const getTime = (currentDate, timeStamp, time) => {
         hour12: false
     }
 
+    const getDate = dateConvert(currentDate)
+
     const formattedDatetime = currentDate
         .toLocaleString('en-US', options)
         .replace(/[/]/g, '-')
@@ -42,7 +46,10 @@ export const getTime = (currentDate, timeStamp, time) => {
     const month = finalFormattedDatetime.slice(0, 2)
     const timeFormat = finalFormattedDatetime.slice(10)
 
-    const finalFormat = `${year}-${month}-${day} ${timeFormat}`
+    const data = {
+        dueTime: `${year}-${month}-${day} ${timeFormat}`,
+        dueTimeDisplay: getDate
+    }
 
-    return finalFormat
+    return data
 }

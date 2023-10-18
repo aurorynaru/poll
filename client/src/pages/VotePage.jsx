@@ -21,7 +21,6 @@ const VotePage = () => {
     const [expirationTime, setExpirationTime] = useState(null)
     const [countdown, setCountdown] = useState(null)
 
-    const [updated, setUpdated] = useState(0)
     const [timeRemaining, setTimeRemaining] = useState({
         days: 31,
         hours: 24,
@@ -58,12 +57,18 @@ const VotePage = () => {
         })
         const resData = await res.json()
         if (resData) {
+            console.log(resData.poll.expiration)
             setIsVoted(resData.selectedAnsId)
             setAnswerArr(resData.options)
             setPollArr(resData.poll)
             setExpirationTime(resData.poll.expiration)
             if (!isExpired) {
-                setIsExpired(resData.isExpired === 1 ? true : false)
+                setIsExpired(
+                    resData.isExpired === 1 ||
+                        resData.isExpired === 'already expired'
+                        ? true
+                        : false
+                )
             }
         }
     }
@@ -147,7 +152,9 @@ const VotePage = () => {
                 </React.Fragment>
             )
         }
-        setCountdown(cdElement())
+        if (expirationTime && timeRemaining) {
+            setCountdown(cdElement())
+        }
     }, [expirationTime, timeRemaining])
 
     const answerElement = useMemo(() => {
