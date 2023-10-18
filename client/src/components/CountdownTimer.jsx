@@ -10,6 +10,8 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
         const currentTime = dayjs().utc(true)
         const expirationTime = dayjs(expirationDate).utc(true)
 
+        console.log('currentTime', currentTime)
+        console.log('expirationTime', expirationTime)
         if (currentTime.isAfter(expirationTime)) {
             return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         }
@@ -49,8 +51,7 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     const counterElement = useMemo(() => {
         const time = timeRemaining
         const expDate = dateConvert(expirationDate)
-        console.log('time', time)
-        console.log('expDate', expDate)
+
         const timeArr = []
         for (const val in time) {
             const letter = val.charAt(0).toLocaleLowerCase()
