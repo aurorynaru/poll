@@ -49,7 +49,8 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     const counterElement = useMemo(() => {
         const time = timeRemaining
         const expDate = dateConvert(expirationDate)
-
+        console.log('time', time)
+        console.log('expDate', expDate)
         const timeArr = []
         for (const val in time) {
             const letter = val.charAt(0).toLocaleLowerCase()
