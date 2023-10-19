@@ -57,7 +57,6 @@ const VotePage = () => {
         })
         const resData = await res.json()
         if (resData) {
-            console.log(resData.poll.expiration)
             setIsVoted(resData.selectedAnsId)
             setAnswerArr(resData.options)
             setPollArr(resData.poll)
@@ -85,7 +84,7 @@ const VotePage = () => {
             })
 
             const errorResponse = await res.json()
-            console.log(errorResponse)
+
             if (res.status != 200) {
                 console.error('Error:', errorResponse.error)
             }
@@ -101,11 +100,6 @@ const VotePage = () => {
             setIsVoted(updatedPollData.selectedAnsId)
             setAnswerArr(updatedPollData.options)
             setPollArr(updatedPollData.poll)
-            setUpdated((prev) => {
-                const updatedNum = prev + 1
-                console.log(updatedNum)
-                return updatedNum
-            })
         })
 
         return () => {
