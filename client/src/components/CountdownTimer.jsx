@@ -9,9 +9,9 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     const calculateTimeRemaining = () => {
         const currentTime = dayjs().utc()
         const expirationTime = dayjs(expirationDate).utc(true)
-
+        const newDate = new Date(expirationDate)
         console.log('currentTime', dayjs().utc())
-        console.log('expirationTime', dayjs(expirationDate).utc(true))
+        console.log('expirationTime', dayjs(newDate).utc(true))
         if (currentTime.isAfter(expirationTime)) {
             return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         }
