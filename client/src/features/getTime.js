@@ -1,5 +1,5 @@
 import { dateConvert } from './dateConvert'
-import dayjs from 'dayjs'
+import { formatISO } from 'date-fns'
 
 export const getTime = (currentDate, timeStamp, time) => {
     switch (timeStamp) {
@@ -22,9 +22,7 @@ export const getTime = (currentDate, timeStamp, time) => {
     const getDate = dateConvert(currentDate)
 
     function sqlDateTime(userDateString) {
-        const userDate = dayjs(userDateString)
-
-        const sqlDatetime = userDate.utc(true).format('YYYY-MM-DD HH:mm:ss')
+        const sqlDatetime = formatISO(new Date(userDateString))
 
         return sqlDatetime
     }

@@ -51,7 +51,8 @@ function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     }, [expirationDate, timeRemaining])
     const counterElement = useMemo(() => {
         const time = timeRemaining
-        const expDate = dateConvert(expirationDate)
+
+        const expDate = dateConvert(new Date(expirationDate))
 
         const timeArr = []
         for (const val in time) {

@@ -1,8 +1,12 @@
-import dayjs from 'dayjs'
-import toObject from 'dayjs/plugin/toObject'
-import utc from 'dayjs/plugin/utc'
-dayjs.extend(toObject)
-dayjs.extend(utc)
+import {
+    getYear,
+    getMonth,
+    getDate,
+    getMinutes,
+    getHours,
+    getSeconds
+} from 'date-fns'
+
 export const dateConvert = (expDate) => {
     const months = [
         'Jan',
@@ -19,14 +23,12 @@ export const dateConvert = (expDate) => {
         'Dec'
     ]
 
-    const date = dayjs(expDate).utc(true).toObject()
-
-    const month = months[date.months]
-    const day = date.date
-    const year = date.years
-    let hours = date.hours
-    const minutes = date.minutes
-    const seconds = date.seconds
+    const month = months[getMonth(expDate)]
+    const day = getDate(expDate)
+    const year = getYear(expDate)
+    let hours = getHours(expDate)
+    const minutes = getMinutes(expDate)
+    const seconds = getSeconds(expDate)
     const ampm = hours >= 12 ? 'PM' : 'AM'
 
     //Convert to 12-hour time format
