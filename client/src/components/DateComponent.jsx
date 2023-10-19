@@ -12,7 +12,8 @@ const DateComponent = ({
     setSelectedTime,
     setValue,
     timeAmount,
-    setTimeAmount
+    setTimeAmount,
+    isSendingData
 }) => {
     const time = [
         { name: 'Days' },
@@ -27,6 +28,7 @@ const DateComponent = ({
             <div className='card flex flex-wrap p-fluid w-full align-items-center'>
                 <div className='p-inputgroup flex-1'>
                     <FormInputNum
+                        isSendingData={isSendingData}
                         setTimeAmount={setTimeAmount}
                         timeAmount={timeAmount}
                         setValue={setValue}
@@ -36,6 +38,7 @@ const DateComponent = ({
                     />
 
                     <Dropdown
+                        disabled={isSendingData ? true : false}
                         value={selectedTime}
                         onChange={(e) => setSelectedTime(e.value)}
                         options={time}

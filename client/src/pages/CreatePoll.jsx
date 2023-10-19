@@ -195,6 +195,7 @@ const CreatePoll = () => {
                 />
                 <div className='flex w-full align-items-center justify-content-around'>
                     <DateComponent
+                        isSendingData={isSendingData}
                         setTimeAmount={setTimeAmount}
                         timeAmount={timeAmount}
                         setValue={setValue}
@@ -233,6 +234,7 @@ const CreatePoll = () => {
                     />
 
                     <Button
+                        disabled={isSendingData ? true : false}
                         onClick={() => addAnswer()}
                         label='Add answer'
                         icon='pi pi-check'

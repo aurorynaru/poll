@@ -9,7 +9,8 @@ const FormInputNum = ({
     value,
     register,
     inputId,
-    required = 'This is required'
+    required = 'This is required',
+    isSendingData
 }) => {
     const setTimerFN = (e) => {
         let value = e.target.value
@@ -21,6 +22,7 @@ const FormInputNum = ({
     return (
         <React.Fragment>
             <InputNumber
+                disabled={isSendingData ? true : false}
                 id={inputId}
                 inputId='integeronly'
                 value={timeAmount}
