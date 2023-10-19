@@ -37,8 +37,8 @@ const Home = () => {
 
         const checkUserId = async () => {
             const checkUserRes = await checkUser(id)
-
-            if (!checkUserRes) {
+            console.log('first', checkUserRes)
+            if (checkUserRes.message === 'not active') {
                 dispatch(setPurge())
                 getAddressFn()
             } else {
