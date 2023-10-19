@@ -1,27 +1,28 @@
 import React, { useEffect, useMemo } from 'react'
 import { dateConvert } from '../features/dateConvert'
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
-import utc from 'dayjs/plugin/utc'
-dayjs.extend(duration)
-dayjs.extend(utc)
+import { differenceInMilliseconds, getTime } from 'date-fns'
 function CountdownTimer({ expirationDate, setTimeRemaining, timeRemaining }) {
     const calculateTimeRemaining = () => {
-        const currentTime = dayjs().utc()
-        const expirationTime = dayjs(expirationDate).utc(true)
-        const newDate = new Date(expirationDate)
-        console.log('currentTime', dayjs().utc())
-        console.log('expirationTime', dayjs(newDate).utc())
-        if (currentTime.isAfter(expirationTime)) {
+        const currentTime = getTime(new Date())
+        const expirationTime = getTime(new Date(expirationDate))
+
+        if (currentTime > expirationTime) {
             return { days: 0, hours: 0, minutes: 0, seconds: 0 }
         }
 
-        const timeDifference = dayjs.duration(expirationTime.diff(currentTime))
+        const timeDifference = differenceInMilliseconds(
+            expirationTime,
+            currentTime
+        )
 
-        const days = timeDifference.days()
-        const hours = timeDifference.hours()
-        const minutes = timeDifference.minutes()
-        const seconds = timeDifference.seconds()
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
+        const hours = Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        )
+        const minutes = Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        )
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000)
 
         return { days, hours, minutes, seconds }
     }
