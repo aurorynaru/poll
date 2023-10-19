@@ -63,9 +63,9 @@ export const checkUser = async (req, res) => {
         }
 
         const { userId } = req.body
-
+        console.log('userId', userId)
         const userObj = await getUserId(userId, address.toString())
-
+        console.log(userObj)
         if (!userObj.id) {
             res.status(200).json({ message: false })
         } else {
