@@ -20,17 +20,17 @@ not sure how to fix this I think its a prime react bug.
 ![image](https://github.com/aurorynaru/poll/assets/111576998/89e2d1db-811f-415b-92f4-a2d2827cd5a2)
 
 
-Install:
-npm install in server and client directory.
+Install:<br>
+npm install in server and client directory.<br>
 env for server
-MYSQL_HOST 
-MYSQL_USER 
-MYSQL_PASS 
-MYSQL_DB 
-PORT
-JWT_SECRET
+MYSQL_HOST <br>
+MYSQL_USER <br>
+MYSQL_PASS <br>
+MYSQL_DB <br>
+PORT<br>
+JWT_SECRET<br>
 
-env for client
-VITE_IP_LOCAL=http://localhost:
-VITE_PORT=3000
-VITE_IP_HOST
+env for client<br>
+VITE_IP_LOCAL=http://localhost:<br>
+VITE_PORT=3000<br>
+VITE_IP_HOST<br>
