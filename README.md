@@ -10,13 +10,13 @@ Create poll page:
 Vote page:
 ![image](https://github.com/aurorynaru/poll/assets/111576998/0bc5a2ad-e643-4cdd-a0ea-01143543d1c0)
 
-Joining a poll
-You just need to copy a code and click the "Join Poll" button
+Joining a poll<br>
+You just need to copy a code and click the "Join Poll" button<br>
 ![image](https://github.com/aurorynaru/poll/assets/111576998/63dd9325-bb66-46f0-8923-e2fde0f1a0ee)
 
-Know Bugs :(
-can't focus on the input field fora long time
-not sure how to fix this I think its a prime react bug.
+Know Bugs :(<br>
+can't focus on the input field fora long time<br>
+not sure how to fix this I think its a prime react bug.<br>
 ![image](https://github.com/aurorynaru/poll/assets/111576998/89e2d1db-811f-415b-92f4-a2d2827cd5a2)
 
 
