@@ -46,10 +46,17 @@ io.on('connection', (socket) => {
 
 const timer = setInterval(() => {
     console.log('checking for expired polls....')
-    const res = deactivatePollFn()
-    if (res === 1) {
-        clearInterval(timer)
-        console.log('Done checking for expired polls')
+
+    try {
+        const res = deactivatePollFn()
+        if (res === 1) {
+            clearInterval(timer)
+            console.log('Done checking for expired polls')
+        } else {
+            console.log('error')
+        }
+    } catch (error) {
+        console.log(error)
     }
 }, 300000)
 

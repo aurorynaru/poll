@@ -1,9 +1,13 @@
 import { checkPollExpired } from '../mysqlPool.js'
 
 export const deactivatePollFn = async () => {
-    const res = await checkPollExpired()
+    try {
+        const res = await checkPollExpired()
 
-    console.log('Total polls deactivated:', res.deactivatedCount)
+        console.log('Total polls deactivated:', res.deactivatedCount)
 
-    return 1
+        return 1
+    } catch (error) {
+        throw error
+    }
 }
